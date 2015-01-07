@@ -1,0 +1,8 @@
+
+# Ignore IntelliJ project files
+.idea/
+
+*.iml
+
+# No need to include built files
+target/
