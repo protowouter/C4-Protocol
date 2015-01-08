@@ -4,12 +4,8 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package nl.woutertimmermans.inf3.c4prot;
+package nl.woutertimmermans.connect4.protocol;
 
-
-import java.util.Map;
-import java.util.HashMap;
-import org.apache.thrift.TEnum;
 
 public enum C4Color implements org.apache.thrift.TEnum {
   BLACK(1),
@@ -22,17 +18,10 @@ public enum C4Color implements org.apache.thrift.TEnum {
   }
 
   /**
-   * Get the integer value of this enum value, as defined in the Thrift IDL.
-   */
-  public int getValue() {
-    return value;
-  }
-
-  /**
    * Find a the enum type by its integer value, as defined in the Thrift IDL.
    * @return null if the value is not found.
    */
-  public static C4Color findByValue(int value) { 
+  public static C4Color findByValue(int value) {
     switch (value) {
       case 1:
         return BLACK;
@@ -41,5 +30,12 @@ public enum C4Color implements org.apache.thrift.TEnum {
       default:
         return null;
     }
+  }
+
+  /**
+   * Get the integer value of this enum value, as defined in the Thrift IDL.
+   */
+  public int getValue() {
+    return value;
   }
 }

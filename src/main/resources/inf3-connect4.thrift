@@ -1,4 +1,4 @@
-namespace java nl.woutertimmermans.inf3.c4prot
+namespace java nl.woutertimmermans.connect4.protocol
 
 struct C4Player {
     1: string name,
