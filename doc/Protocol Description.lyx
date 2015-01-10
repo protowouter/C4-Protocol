@@ -740,9 +740,27 @@ n
 \begin_inset Quotes erd
 \end_inset
 
- (Take great care to ensure that you actually use this newline sequence,
- otherwise it could cause incompatibility between Windows and Unix/Linux
- systems)
+ | 
+\begin_inset Quotes eld
+\end_inset
+
+
+\backslash
+r
+\begin_inset Quotes erd
+\end_inset
+
+ | 
+\begin_inset Quotes eld
+\end_inset
+
+
+\backslash
+n
+\begin_inset Quotes erd
+\end_inset
+
+ ; (All three line endings are recognized by BufferedRead.readLine)
 \end_layout
 
 \begin_layout Standard
@@ -1052,8 +1070,7 @@ chat_local
 Server
 \end_layout
 
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
+\begin_layout Verbatim
 message-command = 
 \begin_inset Quotes eld
 \end_inset

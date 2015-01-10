@@ -28,7 +28,7 @@
  * DO NOT EDIT UNLESS YOU ARE SURE THAT YOU KNOW WHAT YOU ARE DOING
  *  @generated
  */
-package nl.woutertimmermans.connect4.protocol;
+package nl.woutertimmermans.connect4.protocol.thrift;
 
 import org.apache.thrift.TException;
 import org.apache.thrift.async.AsyncMethodCallback;
