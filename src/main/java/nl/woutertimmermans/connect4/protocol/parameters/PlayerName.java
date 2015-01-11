@@ -25,6 +25,7 @@
 package nl.woutertimmermans.connect4.protocol.parameters;
 
 import nl.woutertimmermans.connect4.protocol.constants.ParameterRegex;
+import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,38 +35,49 @@ public class PlayerName implements Parameter {
 // ------------------ Instance variables ----------------
 
     private static final String NAME_REGEX = ParameterRegex.PLAYER_NAME;
-    private static final Pattern NAME_PATTERN = Pattern.compile(NAME_REGEX);
     private String playerName;
 
 // --------------------- Constructors -------------------
 
-    private PlayerName(String name) {
+    public PlayerName(String pName) throws ParameterFormatException {
+        if (!validName(pName)) {
+            throw new ParameterFormatException("name does not conform to regex: " + NAME_REGEX);
+        } else {
+            playerName = pName;
+        }
 
-        playerName = name;
+    }
+
+    public PlayerName() {
 
     }
 
 // ----------------------- Queries ----------------------
 
     public static boolean validName(String name) {
-        Matcher m = NAME_PATTERN.matcher(name);
-        return m.find() && m.group().equals(name);
+
+        return name.matches(NAME_REGEX);
     }
 
-    public static PlayerName createPlayerName(String name) throws ParameterFormatException {
+    public String serialize() {
+        return playerName;
+    }
 
-        if (validName(name)) {
-            return new PlayerName(name);
-        } else {
-            throw new ParameterFormatException("name does not conform to regex: " + NAME_REGEX);
-        }
-
+    @Override
+    public String getValue() {
+        return playerName;
     }
 
 // ----------------------- Commands ---------------------
 
-    public String toString() {
-        return playerName;
+    public void read(String name) throws ParameterFormatException {
+
+        if (validName(name)) {
+            playerName = name;
+        } else {
+            throw new ParameterFormatException("name does not conform to regex: " + NAME_REGEX);
+        }
+
     }
 
 }

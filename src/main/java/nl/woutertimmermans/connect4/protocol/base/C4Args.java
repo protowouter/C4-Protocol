@@ -24,6 +24,9 @@
 
 package nl.woutertimmermans.connect4.protocol.base;
 
+import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
+
 /**
  * Models an collection of arguments of arbitrary length. This abstract class provides facilities for both generating
  * strings and parsing from strings.
@@ -52,6 +55,6 @@ public interface C4Args {
         return result.toString();
     }
 
-    public abstract void read(String argString);
+    public abstract void read(String argString) throws C4Exception;
 
 }

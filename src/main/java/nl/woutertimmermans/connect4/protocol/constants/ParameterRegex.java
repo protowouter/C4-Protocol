@@ -26,5 +26,16 @@ package nl.woutertimmermans.connect4.protocol.constants;
 
 public interface ParameterRegex {
 
-    public static final String PLAYER_NAME = "^([a-zA-Z]|[0-9])*$";
+    public static final String PLAYER_NAME = "^([a-zA-Z]|[0-9])+$";
+
+    public static final String GROUP_NUMBER = "";
+
+    public static final String EXTENSION = "";
+
+    public static final String COLUMN = "";
+
+    public static final String CHAT_MESSAGE = "";
+
+    public static final String ERROR_CODE = "";
+
 }

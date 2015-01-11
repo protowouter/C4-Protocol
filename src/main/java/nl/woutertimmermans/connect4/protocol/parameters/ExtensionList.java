@@ -24,18 +24,59 @@
 
 package nl.woutertimmermans.connect4.protocol.parameters;
 
-public class ParameterFormatException extends Exception {
+import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
+
+import java.util.HashSet;
+import java.util.Set;
+
+public class ExtensionList implements Parameter {
 
 // ------------------ Instance variables ----------------
 
+    Set<Extension> extensions;
+
 // --------------------- Constructors -------------------
 
-    public ParameterFormatException(String message) {
-        super(message);
+    public ExtensionList(Set<String> exts) {
+        extensions = new HashSet<>();
+        exts.forEach((String s) -> extensions.add(new Extension(s)));
+    }
+
+    public ExtensionList() {
+
     }
 
 // ----------------------- Queries ----------------------
 
+    @Override
+    public String serialize() {
+        StringBuilder res = new StringBuilder();
+        for (Extension e : extensions) {
+            res.append(e.serialize());
+        }
+        return new String(res);
+    }
+
+    @Override
+    public Set<String> getValue() {
+        Set<String> result = new HashSet<>();
+        extensions.forEach((Extension e) -> { result.add(e.serialize()); });
+        return result;
+    }
+
 // ----------------------- Commands ---------------------
+
+    @Override
+    public void read(String argString) throws ParameterFormatException {
+
+        extensions = new HashSet<>();
+
+        for (String s : argString.split(" ")) {
+            Extension ex = new Extension();
+            ex.read(s);
+            extensions.add(ex);
+        }
+
+    }
 
 }

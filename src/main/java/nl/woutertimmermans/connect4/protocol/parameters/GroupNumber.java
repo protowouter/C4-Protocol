@@ -24,14 +24,49 @@
 
 package nl.woutertimmermans.connect4.protocol.parameters;
 
+import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
+
 public class GroupNumber implements Parameter {
 
 // ------------------ Instance variables ----------------
 
+    private int groupNumber;
+
 // --------------------- Constructors -------------------
+
+    public GroupNumber(int gNumber) {
+        groupNumber = gNumber;
+    }
+
+    public GroupNumber() {
+
+    }
 
 // ----------------------- Queries ----------------------
 
+    @Override
+    public String serialize() {
+        return Integer.toString(groupNumber);
+    }
+
+    @Override
+    public Integer getValue() {
+        return groupNumber;
+    }
+
 // ----------------------- Commands ---------------------
+
+    @Override
+    public void read(String argString) throws ParameterFormatException {
+
+        try {
+            groupNumber = Integer.parseInt(argString);
+        } catch (NumberFormatException e) {
+            throw new ParameterFormatException(e.getMessage());
+        }
+
+
+
+    }
 
 }

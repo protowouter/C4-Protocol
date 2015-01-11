@@ -24,14 +24,52 @@
 
 package nl.woutertimmermans.connect4.protocol.parameters;
 
+import nl.woutertimmermans.connect4.protocol.constants.ParameterRegex;
+import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
+
 public class Extension implements Parameter {
+
+    static final String EXTENSION_REGEX = ParameterRegex.EXTENSION;
 
 // ------------------ Instance variables ----------------
 
+    String extension;
+
 // --------------------- Constructors -------------------
+
+    public Extension(String e) {
+        extension = e;
+    }
+
+    public Extension() {
+
+    }
 
 // ----------------------- Queries ----------------------
 
+    @Override
+    public String serialize() {
+        return extension;
+    }
+
+    public boolean equals(Object o) {
+        return o instanceof Extension && extension.equals(o);
+    }
+
+    @Override
+    public String getValue() {
+        return extension;
+    }
+
 // ----------------------- Commands ---------------------
+
+    @Override
+    public void read(String argString) throws ParameterFormatException {
+
+
+
+
+
+    }
 
 }

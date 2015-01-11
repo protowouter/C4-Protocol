@@ -22,12 +22,20 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol;
+package nl.woutertimmermans.connect4.protocol.exceptions;
 
-public interface Command {
+public class ParameterFormatException extends C4Exception {
 
-    public Command parseCommandString(String cString);
+// ------------------ Instance variables ----------------
 
-    public String toString();
+// --------------------- Constructors -------------------
+
+    public ParameterFormatException(String message) {
+        super(10, message);
+    }
+
+// ----------------------- Queries ----------------------
+
+// ----------------------- Commands ---------------------
 
 }

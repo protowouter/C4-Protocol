@@ -29,13 +29,15 @@ import nl.woutertimmermans.connect4.protocol.base.C4Client;
 import nl.woutertimmermans.connect4.protocol.base.C4ProcessFunction;
 import nl.woutertimmermans.connect4.protocol.base.C4Processor;
 import nl.woutertimmermans.connect4.protocol.constants.CommandString;
-import nl.woutertimmermans.connect4.protocol.parameters.ParameterFormatException;
+import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
+import nl.woutertimmermans.connect4.protocol.exceptions.SyntaxError;
+import nl.woutertimmermans.connect4.protocol.parameters.ExtensionList;
+import nl.woutertimmermans.connect4.protocol.parameters.GroupNumber;
 import nl.woutertimmermans.connect4.protocol.parameters.PlayerName;
 
 import java.io.BufferedWriter;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class CoreServer {
@@ -70,7 +72,7 @@ public class CoreServer {
 
         }
 
-        private void sendJoin(String pName, int gNumber, Set<String> exts) {
+        private void sendJoin(String pName, int gNumber, Set<String> exts) throws C4Exception {
 
             JoinArgs args = new JoinArgs(pName, gNumber, exts);
 
@@ -82,10 +84,10 @@ public class CoreServer {
 
     public static class Processor<I extends Iface> extends C4Processor<I> {
         public Processor(I interf) {
-            super(interf, getProcessMap());
+            super(interf);
         }
 
-        private static <I extends Iface> Map<String, C4ProcessFunction<I, ? extends C4Args>> getProcessMap() {
+        protected Map<String, C4ProcessFunction<I, ? extends C4Args>> getProcessMap() {
             Map<String, C4ProcessFunction<I, ? extends C4Args>> processMap = new HashMap<>();
             processMap.put("join", new Join<>());
             return processMap;
@@ -95,7 +97,7 @@ public class CoreServer {
     public static class Join<I extends Iface> extends C4ProcessFunction<I, JoinArgs> {
 
         public Join() {
-            super("join");
+            super();
         }
 
         @Override
@@ -107,7 +109,7 @@ public class CoreServer {
         public void perform(JoinArgs args, I iface) {
 
             try {
-                iface.join(args.playerName, args.groupNumber, args.exts);
+                iface.join(args.playerName.getValue(), args.groupNumber.getValue(), args.exts.getValue());
             } catch (ParameterFormatException e) {
                 Logger.getGlobal().throwing("Join", "perform", e);
             }
@@ -118,17 +120,17 @@ public class CoreServer {
 
     public static class JoinArgs implements C4Args {
 
-        String playerName;
-        int groupNumber;
-        Set<String> exts;
+        PlayerName playerName;
+        GroupNumber groupNumber;
+        ExtensionList exts;
 
-        public JoinArgs(String pName, int gNumber, Set<String> es) {
-            playerName = pName;
-            groupNumber = gNumber;
-            exts = es;
+        public JoinArgs(String pName, int gNumber, Set<String> es) throws ParameterFormatException {
+            playerName = new PlayerName(pName);
+            groupNumber = new GroupNumber(gNumber);
+            exts = new ExtensionList(es);
         }
 
-        public JoinArgs() {
+        private JoinArgs() {
 
         }
 
@@ -136,14 +138,24 @@ public class CoreServer {
         @Override
         public String[] getArgArray() {
             String[] result = new String[3];
-            result[0] = playerName;
-            result[1] = Integer.toString(groupNumber);
-            result[2] = exts.toString();
+            result[0] = playerName.serialize();
+            result[1] = groupNumber.serialize();
+            result[2] = exts.serialize();
             return result;
         }
 
         @Override
-        public void read(String argString) {
+        public void read(String argString) throws C4Exception {
+            String[] args = argString.split(" ", 3);
+            if (args.length < 2) {
+                throw new SyntaxError("Wrong amount of parameters need at least 2, you gave " + args.length);
+            }
+            playerName = new PlayerName();
+            playerName.read(args[0]);
+            groupNumber = new GroupNumber();
+            groupNumber.read(args[1]);
+            exts = new ExtensionList();
+            exts.read(args.length >= 3 ? args[2] : "");
 
         }
     }

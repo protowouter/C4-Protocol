@@ -22,43 +22,22 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.base;
+package nl.woutertimmermans.connect4.protocol.exceptions;
 
-import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
-import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
-
-/**
- * Models an function that can be performed on an interface.
- *
- * @param <I> The interface that should be implemented by the
- *            object on which the function method will be called.
- * @param <A> The class of arguments that this function can process.
- */
-
-public abstract class C4ProcessFunction<I, A extends C4Args> {
+public class SyntaxError extends C4Exception {
 
 // ------------------ Instance variables ----------------
 
 // --------------------- Constructors -------------------
 
-    public C4ProcessFunction() {
+    public SyntaxError(String message) {
+
+        super(10, message);
 
     }
 
 // ----------------------- Queries ----------------------
 
 // ----------------------- Commands ---------------------
-
-    public final void process(String argString, I iface) throws C4Exception {
-
-        A args = getEmptyArgsInstance();
-        args.read(argString);
-        perform(args, iface);
-
-    }
-
-    public abstract A getEmptyArgsInstance();
-
-    protected abstract void perform(A args, I iface);
 
 }

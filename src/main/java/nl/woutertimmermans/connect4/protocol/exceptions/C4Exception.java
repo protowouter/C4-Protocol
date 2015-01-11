@@ -22,30 +22,27 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol;
+package nl.woutertimmermans.connect4.protocol.exceptions;
 
-import nl.woutertimmermans.connect4.protocol.constants.CommandString;
-import nl.woutertimmermans.connect4.protocol.parameters.Parameter;
+public class C4Exception extends Exception {
 
-import java.util.ArrayList;
-import java.util.List;
+// ------------------ Instance variables ----------------
 
-public enum ServerCommand implements Command {
+    private int errorCode;
 
-    JOIN(CommandString.JOIN, new ArrayList<Parameter>());
+// --------------------- Constructors -------------------
 
-    private String commandString;
-    private List<Parameter> pars;
-
-
-    ServerCommand(String cString, List<Parameter> parameters) {
-
-        commandString = cString;
-        pars = parameters;
-
+    public C4Exception(int eCode, String message) {
+        super(message);
+        errorCode = eCode;
     }
 
-    public Command parseCommandString(String cString) {
-        return null;
+// ----------------------- Queries ----------------------
+
+    public int getErrorCode() {
+        return errorCode;
     }
+
+// ----------------------- Commands ---------------------
+
 }

@@ -24,6 +24,9 @@
 
 package nl.woutertimmermans.connect4.protocol.base;
 
+import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
+
 import java.util.Map;
 
 /**
@@ -41,25 +44,27 @@ public abstract class C4Processor<I> {
 
 // --------------------- Constructors -------------------
 
-    public C4Processor(I interf, Map<String, C4ProcessFunction<I, ? extends C4Args>> fMap) {
-
+    public C4Processor(I interf) {
         iface = interf;
-        functionMap = fMap;
-
-
+        functionMap = getProcessMap();
     }
 
 // ----------------------- Queries ----------------------
 
+    protected abstract Map<String, C4ProcessFunction<I, ? extends C4Args>> getProcessMap();
+
 // ----------------------- Commands ---------------------
 
-    public boolean process(String command) {
+    public boolean process(String commandstring) throws C4Exception {
+        String[] csArray = commandstring.split(" ", 2);
+        String command = csArray[0];
+        String args = csArray.length > 1 ? csArray[1] : "";
         C4ProcessFunction<I, ? extends C4Args> fn = functionMap.get(command);
 
         if (fn == null) {
             return false;
         } else {
-            fn.perform(null, iface);
+            fn.process(args, iface);
             return true;
         }
     }

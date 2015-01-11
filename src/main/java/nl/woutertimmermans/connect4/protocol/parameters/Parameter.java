@@ -24,8 +24,14 @@
 
 package nl.woutertimmermans.connect4.protocol.parameters;
 
-public interface Parameter {
+import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
 
-    public String toString();
+public interface Parameter<T> {
+
+    public String serialize();
+
+    public void read(String argString) throws ParameterFormatException;
+
+    public T getValue();
 
 }
