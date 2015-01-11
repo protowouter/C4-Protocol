@@ -25,13 +25,17 @@
 package nl.woutertimmermans.connect4.protocol.fgroup;
 
 import nl.woutertimmermans.connect4.protocol.base.C4Args;
+import nl.woutertimmermans.connect4.protocol.base.C4Client;
 import nl.woutertimmermans.connect4.protocol.base.C4ProcessFunction;
 import nl.woutertimmermans.connect4.protocol.base.C4Processor;
 import nl.woutertimmermans.connect4.protocol.constants.CommandString;
-import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
+import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import nl.woutertimmermans.connect4.protocol.parameters.ErrorCode;
+import nl.woutertimmermans.connect4.protocol.parameters.ExtensionList;
+import nl.woutertimmermans.connect4.protocol.parameters.GroupNumber;
 
+import java.io.BufferedWriter;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -43,12 +47,43 @@ public class CoreClient {
 
     public interface Iface {
         public void accept(int gNumber, Set<String> exts);
+
+        public void error(int eCode);
     }
 
-    public static class Client implements Iface {
+    public static class Client extends C4Client implements Iface {
+
+        public Client(BufferedWriter out) {
+            super(out);
+        }
 
         @Override
         public void accept(int gNumber, Set<String> exts) {
+
+            sendAccept(gNumber, exts);
+
+        }
+
+        @Override
+        public void error(int eCode) {
+
+            sendError(eCode);
+
+        }
+
+        private void sendAccept(int gNumber, Set<String> exts) {
+
+            AcceptArgs args = new AcceptArgs(gNumber, exts);
+
+            send(CommandString.ACCEPT, args);
+
+        }
+
+        private void sendError(int eCode) {
+
+            ErrorArgs args = new ErrorArgs(eCode);
+
+            send(CommandString.ERROR, args);
 
         }
     }
@@ -63,6 +98,7 @@ public class CoreClient {
         protected Map<String, C4ProcessFunction<I, ? extends C4Args>> getProcessMap() {
             Map<String, C4ProcessFunction<I, ? extends C4Args>> processMap = new HashMap<>();
             processMap.put(CommandString.ACCEPT, new Accept<>());
+            processMap.put(CommandString.ERROR, new Error<>());
             return processMap;
         }
     }
@@ -71,45 +107,84 @@ public class CoreClient {
 
         @Override
         public AcceptArgs getEmptyArgsInstance() {
-            return null;
+            return new AcceptArgs();
         }
 
         @Override
         protected void perform(AcceptArgs args, I iface) {
+
+            iface.accept(args.groupNumber.getValue(), args.extensionList.getValue());
+
+        }
+    }
+
+    public static class Error<I extends Iface> extends C4ProcessFunction<I, ErrorArgs> {
+
+        @Override
+        public ErrorArgs getEmptyArgsInstance() {
+            return new ErrorArgs();
+        }
+
+        @Override
+        protected void perform(ErrorArgs args, I iface) {
+            iface.error(args.errorCode.getValue());
+        }
+
+    }
+
+    public static class AcceptArgs implements C4Args {
+
+        GroupNumber groupNumber;
+        ExtensionList extensionList;
+
+        public AcceptArgs() {
+
+        }
+
+        public AcceptArgs(int gNumber, Set<String> exts) {
+            groupNumber = new GroupNumber(gNumber);
+            extensionList = new ExtensionList(exts);
+        }
+
+        @Override
+        public String[] getArgArray() {
+            return new String[]{groupNumber.serialize(), extensionList.serialize()};
+        }
+
+        @Override
+        public void read(String argString) throws C4Exception {
+
+            String[] args = argString.split(" ", 2);
+            groupNumber.read(args[0]);
+            if (args.length > 1) {
+                extensionList.read(args[1]);
+            }
 
 
 
         }
     }
 
-    public static class AcceptArgs implements C4Args {
+    public static class ErrorArgs implements C4Args {
+        ErrorCode errorCode;
 
-        int groupNumber;
-        Set<String> extensionList;
+        public ErrorArgs() {
 
-        @Override
-        public String[] getArgArray() {
-            return new String[] {Integer.toString(groupNumber), extensionList.toString()};
+        }
+
+        public ErrorArgs(int eCode) {
+            errorCode = new ErrorCode(eCode);
         }
 
         @Override
-        public void read(String argString) throws ParameterFormatException {
+        public String[] getArgArray() {
+            return new String[]{errorCode.serialize()};
+        }
 
-            try {
-                String[] args = argString.split(" ");
-                groupNumber = Integer.parseInt(args[0]);
-                extensionList = new HashSet<>();
-                for (int i = 1; i < args.length; i++) {
-                    extensionList.add(args[i]);
-                }
-            } catch (NumberFormatException e) {
-
-                throw new ParameterFormatException(e.getMessage());
-
-            }
-
-
-
+        @Override
+        public void read(String argString) throws C4Exception {
+            errorCode = new ErrorCode();
+            errorCode.read(argString);
         }
     }
 

@@ -22,42 +22,49 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.base;
+package nl.woutertimmermans.connect4.protocol.parameters;
 
-import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
 
-/**
- * Models an function that can be performed on an interface.
- *
- * @param <I> The interface that should be implemented by the
- *            object on which the function method will be called.
- * @param <A> The class of arguments that this function can process.
- */
-
-public abstract class C4ProcessFunction<I, A extends C4Args> {
+public class ErrorCode implements Parameter {
 
 // ------------------ Instance variables ----------------
 
+    int errorCode;
+
 // --------------------- Constructors -------------------
 
-    public C4ProcessFunction() {
+    public ErrorCode() {
 
+    }
+
+    public ErrorCode(int eCode) {
+        errorCode = eCode;
     }
 
 // ----------------------- Queries ----------------------
 
-// ----------------------- Commands ---------------------
-
-    public final void process(String argString, I iface) throws C4Exception {
-
-        A args = getEmptyArgsInstance();
-        args.read(argString);
-        perform(args, iface);
-
+    @Override
+    public Integer getValue() {
+        return errorCode;
     }
 
-    public abstract A getEmptyArgsInstance();
+    @Override
+    public String serialize() {
+        return Integer.toString(errorCode);
+    }
 
-    protected abstract void perform(A args, I iface) throws C4Exception;
+// ----------------------- Commands ---------------------
+
+    @Override
+    public void read(String argString) throws ParameterFormatException {
+
+        try {
+            errorCode = Integer.parseInt(argString);
+        } catch (NumberFormatException e) {
+            throw new ParameterFormatException(e.getMessage());
+        }
+
+    }
 
 }

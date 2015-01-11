@@ -46,6 +46,8 @@ public interface CommandString {
 
     public static final String GAME_END = "game_end";
 
+    public static final String ERROR = "error";
+
     // ---------------- Lobby Server -------------
 
     public static final String STATE_CHANGE = "state_change";

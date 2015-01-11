@@ -37,8 +37,9 @@ import nl.woutertimmermans.connect4.protocol.parameters.GroupNumber;
 import nl.woutertimmermans.connect4.protocol.parameters.PlayerName;
 
 import java.io.BufferedWriter;
-import java.util.*;
-import java.util.logging.Logger;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class CoreServer {
 
@@ -56,8 +57,7 @@ public class CoreServer {
 
 
     public interface Iface {
-        public void join(String pName, int gNumber, Set<String> exts)
-                throws ParameterFormatException;
+        public void join(String pName, int gNumber, Set<String> exts) throws C4Exception;
     }
 
     public static class Client extends C4Client implements Iface {
@@ -66,9 +66,9 @@ public class CoreServer {
             super(out);
         }
 
-        public void join(String pName, int gNumber, Set<String> exts)
-                throws ParameterFormatException {
+        public void join(String pName, int gNumber, Set<String> exts) throws C4Exception {
             boolean valid = PlayerName.validName(pName);
+            sendJoin(pName, gNumber, exts);
 
         }
 
@@ -106,13 +106,10 @@ public class CoreServer {
         }
 
         @Override
-        public void perform(JoinArgs args, I iface) {
+        public void perform(JoinArgs args, I iface) throws C4Exception {
 
-            try {
-                iface.join(args.playerName.getValue(), args.groupNumber.getValue(), args.exts.getValue());
-            } catch (ParameterFormatException e) {
-                Logger.getGlobal().throwing("Join", "perform", e);
-            }
+            iface.join(args.playerName.getValue(), args.groupNumber.getValue(), args.exts.getValue());
+
 
         }
     }
@@ -137,18 +134,19 @@ public class CoreServer {
 
         @Override
         public String[] getArgArray() {
-            String[] result = new String[3];
-            result[0] = playerName.serialize();
-            result[1] = groupNumber.serialize();
-            result[2] = exts.serialize();
-            return result;
+            return new String[]{
+                    playerName.serialize(),
+                    groupNumber.serialize(),
+                    exts.serialize()
+            };
         }
 
         @Override
         public void read(String argString) throws C4Exception {
             String[] args = argString.split(" ", 3);
             if (args.length < 2) {
-                throw new SyntaxError("Wrong amount of parameters need at least 2, you gave " + args.length);
+                throw new SyntaxError("Wrong amount of parameters need at least 2, you gave "
+                        + args.length);
             }
             playerName = new PlayerName();
             playerName.read(args[0]);
