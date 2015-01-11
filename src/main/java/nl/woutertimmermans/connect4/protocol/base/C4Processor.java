@@ -22,23 +22,30 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.functionality;
+package nl.woutertimmermans.connect4.protocol.base;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.util.logging.Logger;
+import java.util.Map;
 
-public class C4Client {
+/**
+ * An processor is an object that translates an string received from the network to method calls on local objects.
+ *
+ * @param <I>
+ */
+
+public abstract class C4Processor<I> {
 
 // ------------------ Instance variables ----------------
 
-    private BufferedWriter out;
+    private I iface;
+    private Map<String, C4ProcessFunction<I, ? extends C4Args>> functionMap;
 
 // --------------------- Constructors -------------------
 
-    public C4Client(BufferedWriter o) {
+    public C4Processor(I interf, Map<String, C4ProcessFunction<I, ? extends C4Args>> fMap) {
 
-        out = o;
+        iface = interf;
+        functionMap = fMap;
+
 
     }
 
@@ -46,15 +53,15 @@ public class C4Client {
 
 // ----------------------- Commands ---------------------
 
-    public void send(String command, C4Args args) {
-        try {
-            out.write(command + " " + args.serialize());
-            out.newLine();
-            out.flush();
-        } catch (IOException e) {
-            Logger.getGlobal().throwing("C4Client", "send", e);
-        }
+    public boolean process(String command) {
+        C4ProcessFunction<I, ? extends C4Args> fn = functionMap.get(command);
 
+        if (fn == null) {
+            return false;
+        } else {
+            fn.perform(null, iface);
+            return true;
+        }
     }
 
 }

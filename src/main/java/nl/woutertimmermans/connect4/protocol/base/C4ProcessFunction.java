@@ -22,23 +22,25 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.functionality;
+package nl.woutertimmermans.connect4.protocol.base;
 
-import java.util.Map;
+/**
+ * Models an function that can be performed on an interface.
+ *
+ * @param <I> The interface that should be implemented by the
+ *            object on which the function method will be called.
+ * @param <A> The class of arguments that this function can process.
+ */
 
-public abstract class C4Processor<I> {
+public abstract class C4ProcessFunction<I, A extends C4Args> {
 
 // ------------------ Instance variables ----------------
 
-    private I iface;
-    private Map<String, C4ProcessFunction<I, ? extends C4Args>> functionMap;
+    private String functionName;
 
 // --------------------- Constructors -------------------
 
-    public C4Processor(I interf, Map<String, C4ProcessFunction<I, ? extends C4Args>> fMap) {
-
-        iface = interf;
-
+    public C4ProcessFunction(String fName) {
 
     }
 
@@ -46,14 +48,16 @@ public abstract class C4Processor<I> {
 
 // ----------------------- Commands ---------------------
 
-    public boolean process(String command) {
-        C4ProcessFunction fn = functionMap.get(command);
+    public final void process(String argString, I iface) {
 
-        if (fn == null) {
-            return false;
-        } else {
-            return true;
-        }
+        A args = getEmptyArgsInstance();
+        args.read(argString);
+        perform(args, iface);
+
     }
+
+    public abstract A getEmptyArgsInstance();
+
+    public abstract void perform(A args, I iface);
 
 }

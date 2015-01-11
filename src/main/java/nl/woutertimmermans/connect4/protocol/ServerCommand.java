@@ -24,6 +24,7 @@
 
 package nl.woutertimmermans.connect4.protocol;
 
+import nl.woutertimmermans.connect4.protocol.constants.CommandString;
 import nl.woutertimmermans.connect4.protocol.parameters.Parameter;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ import java.util.List;
 
 public enum ServerCommand implements Command {
 
-    JOIN(CommandStrings.JOIN, new ArrayList<Parameter>());
+    JOIN(CommandString.JOIN, new ArrayList<Parameter>());
 
     private String commandString;
     private List<Parameter> pars;

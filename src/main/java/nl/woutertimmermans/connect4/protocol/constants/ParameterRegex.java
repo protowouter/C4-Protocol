@@ -22,31 +22,9 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.functionality;
+package nl.woutertimmermans.connect4.protocol.constants;
 
-public interface C4Args {
+public interface ParameterRegex {
 
-// ------------------ Instance variables ----------------
-
-// --------------------- Constructors -------------------
-
-// ----------------------- Queries ----------------------
-
-    public abstract String[] getArgArray();
-
-
-// ----------------------- Commands ---------------------
-
-    public default String serialize() {
-        String[] args = getArgArray();
-        StringBuilder result = new StringBuilder();
-        for (String s : args) {
-            result.append(s);
-            result.append(" ");
-        }
-        return result.toString();
-    }
-
-    public abstract void read(String argString);
-
+    public static final String PLAYER_NAME = "^([a-zA-Z]|[0-9])*$";
 }

@@ -22,9 +22,13 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.functionality;
+package nl.woutertimmermans.connect4.protocol.fgroup;
 
-import nl.woutertimmermans.connect4.protocol.CommandStrings;
+import nl.woutertimmermans.connect4.protocol.base.C4Args;
+import nl.woutertimmermans.connect4.protocol.base.C4Client;
+import nl.woutertimmermans.connect4.protocol.base.C4ProcessFunction;
+import nl.woutertimmermans.connect4.protocol.base.C4Processor;
+import nl.woutertimmermans.connect4.protocol.constants.CommandString;
 import nl.woutertimmermans.connect4.protocol.parameters.ParameterFormatException;
 import nl.woutertimmermans.connect4.protocol.parameters.PlayerName;
 
@@ -70,7 +74,7 @@ public class CoreServer {
 
             JoinArgs args = new JoinArgs(pName, gNumber, exts);
 
-            send(CommandStrings.JOIN, args);
+            send(CommandString.JOIN, args);
 
         }
 

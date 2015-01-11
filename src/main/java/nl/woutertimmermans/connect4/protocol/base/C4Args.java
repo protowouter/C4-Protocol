@@ -22,50 +22,36 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.parameters;
+package nl.woutertimmermans.connect4.protocol.base;
 
-import nl.woutertimmermans.connect4.protocol.constants.ParameterRegex;
+/**
+ * Models an collection of arguments of arbitrary length. This abstract class provides facilities for both generating
+ * strings and parsing from strings.
+ */
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-public class PlayerName implements Parameter {
+public interface C4Args {
 
 // ------------------ Instance variables ----------------
 
-    private static final String NAME_REGEX = ParameterRegex.PLAYER_NAME;
-    private static final Pattern NAME_PATTERN = Pattern.compile(NAME_REGEX);
-    private String playerName;
-
 // --------------------- Constructors -------------------
-
-    private PlayerName(String name) {
-
-        playerName = name;
-
-    }
 
 // ----------------------- Queries ----------------------
 
-    public static boolean validName(String name) {
-        Matcher m = NAME_PATTERN.matcher(name);
-        return m.find() && m.group().equals(name);
-    }
+    abstract String[] getArgArray();
 
-    public static PlayerName createPlayerName(String name) throws ParameterFormatException {
-
-        if (validName(name)) {
-            return new PlayerName(name);
-        } else {
-            throw new ParameterFormatException("name does not conform to regex: " + NAME_REGEX);
-        }
-
-    }
 
 // ----------------------- Commands ---------------------
 
-    public String toString() {
-        return playerName;
+    public default String serialize() {
+        String[] args = getArgArray();
+        StringBuilder result = new StringBuilder();
+        for (String s : args) {
+            result.append(s);
+            result.append(" ");
+        }
+        return result.toString();
     }
+
+    public abstract void read(String argString);
 
 }

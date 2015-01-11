@@ -22,25 +22,23 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.functionality;
+package nl.woutertimmermans.connect4.protocol.base;
 
-/**
- * Models an function that can be performed on an interface.
- *
- * @param <I> The interface that should be implemented by the
- *            object on which the function method will be called.
- * @param <A> The class of arguments that this function can process.
- */
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.util.logging.Logger;
 
-public abstract class C4ProcessFunction<I, A extends C4Args> {
+public class C4Client {
 
 // ------------------ Instance variables ----------------
 
-    private String functionName;
+    private BufferedWriter out;
 
 // --------------------- Constructors -------------------
 
-    public C4ProcessFunction(String fName) {
+    public C4Client(BufferedWriter o) {
+
+        out = o;
 
     }
 
@@ -48,16 +46,15 @@ public abstract class C4ProcessFunction<I, A extends C4Args> {
 
 // ----------------------- Commands ---------------------
 
-    public final void process(String argString, I iface) {
-
-        A args = getEmptyArgsInstance();
-        args.read(argString);
-        perform(args, iface);
+    public void send(String command, C4Args args) {
+        try {
+            out.write(command + " " + args.serialize());
+            out.newLine();
+            out.flush();
+        } catch (IOException e) {
+            Logger.getGlobal().throwing("C4Client", "send", e);
+        }
 
     }
-
-    public abstract A getEmptyArgsInstance();
-
-    public abstract void perform(A args, I iface);
 
 }

@@ -22,9 +22,9 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol;
+package nl.woutertimmermans.connect4.protocol.constants;
 
-public interface CommandStrings {
+public interface CommandString {
 
     // ------------ Core Client ---------------
 
@@ -69,6 +69,11 @@ public interface CommandStrings {
     // -------------- Challenge Server ------------
 
     public static final String NOTIFY_CHALLENGE = "challenge";
+
+    // -------------- Security Server -------------
+
+    public static final String STARTTLS = "STARTTLS";
+
 
 
 }

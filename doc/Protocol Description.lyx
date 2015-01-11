@@ -27,7 +27,7 @@
 \paperfontsize default
 \spacing single
 \use_hyperref true
-\pdf_title "Connect4 protocol INF3"
+\pdf_title "A Client-Server protocol for the game of Connect4"
 \pdf_author "Wouter Timmermans"
 \pdf_subject "Description of a client server protocol for the game Connect4"
 \pdf_keywords "protocol connect4 inf3"
@@ -83,7 +83,7 @@
 \begin_body
 
 \begin_layout Title
-An Client-Server protocol for the game of Connect4
+A Client-Server protocol for the game of Connect4
 \end_layout
 
 \begin_layout Subtitle
@@ -826,6 +826,11 @@ _
  } , space , {uppercase | lowercase | space | numeric | } , newline ;
 \end_layout
 
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+port-number = ? all valid TCP port numbers ? ;
+\end_layout
+
 \begin_layout Section
 Parameters
 \end_layout
@@ -907,7 +912,7 @@ The board is 7 columns wide and 6 rows high.
 \end_layout
 
 \begin_layout Itemize
-The difficulty for the tournament AI is 10 seconds ( This is just an placeholder
+The difficulty for the tournament AI is 10 seconds ( This is just a placeholder
  value which can be decided upon at a later time).
 \end_layout
 
@@ -936,7 +941,7 @@ During the lifetime of its connection to the server the client can be in
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-Connected The client has setup an TCP connection to the server but has not
+Connected The client has setup a TCP connection to the server but has not
  yet sent the 
 \begin_inset CommandInset ref
 LatexCommand nameref
@@ -1086,6 +1091,28 @@ name "005-Cannot-challenge"
 008 Command not valid in this context
 \end_layout
 
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+009 Invalid parameter
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+010 Syntax error
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+011 Authentication required
+\begin_inset CommandInset label
+LatexCommand label
+name "011 Authentication required"
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Section
 Commands
 \end_layout
@@ -1101,10 +1128,10 @@ reference "sub:Core"
 \end_inset
 
  group.
- If an client or server has signaled the other end of the connection it
- supports an optional function group it MUST implement the function group.
+ If a client or server has signaled the other end of the connection it supports
+ an optional function group it MUST implement the function group.
  The client or server MAY implement other function groups.
- A client or server MUST NOT send an command in an optional function group
+ A client or server MUST NOT send a command in an optional function group
  that is not acknowledged to be supported by the other end of the connection.
  
 \end_layout
@@ -1187,7 +1214,7 @@ name "par:ready"
 
 \begin_layout Standard
 After the server has accepted the client's connection, the server is waiting
- for the client to signal it is ready to play an game.
+ for the client to signal it is ready to play a game.
  When the client sends the ready command to the server the server SHOULD
  send the 
 \begin_inset CommandInset ref
@@ -1770,7 +1797,6 @@ reference "sec:Client-states"
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-
 message-command = 
 \begin_inset Quotes eld
 \end_inset
@@ -1808,8 +1834,8 @@ issue challenge
 \end_layout
 
 \begin_layout Standard
-An client can send this command to an server to challenge another client
- for a game of Connect4.
+A client can send this command to a server to challenge another client for
+ a game of Connect4.
  The server MUST notify the other client of the challenge or send an error.
  The client MUST be in the Lobby state 
 \begin_inset CommandInset ref
@@ -1841,7 +1867,7 @@ respond challenge
 \end_layout
 
 \begin_layout Standard
-When an client has been notified of a challenge by the server it can respond
+When a client has been notified of a challenge by the server it can respond
  to the challenge by sending the respond challenge command to the server.
  The client MUST include a boolean answer and a player name and it MUST
  be the player name received in the corresponding notify challenge command.
@@ -1878,7 +1904,7 @@ name "par:notify-challenge"
 \end_layout
 
 \begin_layout Standard
-When the server receives an issue challenge command from an client it MUST
+When the server receives an issue challenge command from a client it MUST
  inform the mentioned client or send an error 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1890,7 +1916,8 @@ reference "005-Cannot-challenge"
  Lobby state.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
 notify-challenge-command = 
 \begin_inset Quotes eld
 \end_inset
@@ -1900,6 +1927,130 @@ challenge
 \end_inset
 
  , space , player-name ; 
+\end_layout
+
+\begin_layout Subsection
+Leaderboard
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+leaderboard-extension-symbol = 
+\begin_inset Quotes eld
+\end_inset
+
+Leaderboard
+\begin_inset Quotes erd
+\end_inset
+
+ ;
+\end_layout
+
+\begin_layout Standard
+At this time there is too much unknown to offer an proposal for an leaderboard
+ protocol extension.
+\end_layout
+
+\begin_layout Subsubsection
+Client -> Server
+\end_layout
+
+\begin_layout Subsection
+Security
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+security-extension-symbol = 
+\begin_inset Quotes eld
+\end_inset
+
+STARTTLS
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Servers which wish to enhance the security level of the server can support
+ the security extension which will support both secure connections and authentic
+ation of the server and the client.
+ To enable the client and server to securely communicate the TLS 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "rfc5246"
+
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "ietf-tls-docs"
+
+\end_inset
+
+ protocol will be used.
+ The commands in this document merely serve the purpose of setting up a
+ new secure connection.
+ 
+\end_layout
+
+\begin_layout Standard
+A server which also wants to offer secured connections MUST listen to a
+ second port for secured connections.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Server -> Client
+\end_layout
+
+\begin_layout Paragraph
+starttls
+\end_layout
+
+\begin_layout Standard
+The server can send this command to a client it wishes to have a secure
+ connection with.
+ The client MUST be in the accepted state 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Client-states"
+
+\end_inset
+
+.
+ The port number parameter MUST be supplied and it MUST be another port
+ than the non-TLS port.
+ The server MUST be listening for TLS connections on the given port.
+ After receiving this command the client MUST disconnect and setup a secure
+ connection with the server on the supplied port.
+ It is RECOMMENDED that the server does not accept any commands from the
+ client after sending the starttls command but rather sends an 011 Authenticatio
+n required 
+\begin_inset CommandInset ref
+LatexCommand eqref
+reference "011 Authentication required"
+
+\end_inset
+
+ error.
+ The server and client MUST treat the secured connection as new and MUST
+ discard any prior gathered state.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+starttls-command = 
+\begin_inset Quotes eld
+\end_inset
+
+starttls
+\begin_inset Quotes erd
+\end_inset
+
+, space , port-number ;
 \end_layout
 
 \begin_layout Section
@@ -1955,6 +2106,14 @@ start_game Wouter Daniel
 \begin_layout Itemize
 Let the error command have an optional message parameter in order to give
  more verbose errors.
+\end_layout
+
+\begin_layout Itemize
+8.5 Leaderboard extension has preliminary status at this time.
+\end_layout
+
+\begin_layout Itemize
+8.6 Security extension has preliminary status at this time
 \end_layout
 
 \begin_layout Standard
