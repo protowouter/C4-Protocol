@@ -26,10 +26,6 @@ package nl.woutertimmermans.connect4.protocol.parameters;
 
 import nl.woutertimmermans.connect4.protocol.constants.ParameterRegex;
 import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 public class PlayerName implements Parameter {
 
 // ------------------ Instance variables ----------------

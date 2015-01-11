@@ -30,9 +30,9 @@ import nl.woutertimmermans.connect4.protocol.base.C4ProcessFunction;
 import nl.woutertimmermans.connect4.protocol.base.C4Processor;
 import nl.woutertimmermans.connect4.protocol.constants.CommandString;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
-import nl.woutertimmermans.connect4.protocol.parameters.ErrorCode;
-import nl.woutertimmermans.connect4.protocol.parameters.ExtensionList;
-import nl.woutertimmermans.connect4.protocol.parameters.GroupNumber;
+import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
+import nl.woutertimmermans.connect4.protocol.exceptions.SyntaxError;
+import nl.woutertimmermans.connect4.protocol.parameters.*;
 
 import java.io.BufferedWriter;
 import java.util.HashMap;
@@ -47,6 +47,14 @@ public class CoreClient {
 
     public interface Iface {
         public void accept(int gNumber, Set<String> exts);
+
+        public void startGame(String p1, String p2);
+
+        public void requestMove(String player);
+
+        public void doneMove(String player, int col);
+
+        public void gameEnd(String player);
 
         public void error(int eCode);
     }
@@ -65,6 +73,26 @@ public class CoreClient {
         }
 
         @Override
+        public void startGame(String p1, String p2) {
+            sendStartGame(p1, p2);
+        }
+
+        @Override
+        public void requestMove(String player) {
+            sendRequestMove(player);
+        }
+
+        @Override
+        public void doneMove(String player, int col) {
+            sendDoneMove(player, col);
+        }
+
+        @Override
+        public void gameEnd(String player) {
+            sendGameEnd(player);
+        }
+
+        @Override
         public void error(int eCode) {
 
             sendError(eCode);
@@ -76,6 +104,34 @@ public class CoreClient {
             AcceptArgs args = new AcceptArgs(gNumber, exts);
 
             send(CommandString.ACCEPT, args);
+
+        }
+
+        private void sendStartGame(String p1, String p2) {
+
+            StartGameArgs args = new StartGameArgs(p1, p2);
+
+            send(CommandString.START_GAME, args);
+
+        }
+
+        private void sendRequestMove(String player) {
+
+            RequestMoveArgs args = new RequestMoveArgs(player);
+
+            send(CommandString.REQUEST_MOVE, args);
+
+        }
+
+        private void sendDoneMove(String player, int col) {
+            DoneMoveArgs args = new DoneMoveArgs(player, col);
+            send(CommandString.DONE_MOVE, args);
+        }
+
+        private void sendGameEnd(String player) {
+
+            GameEndArgs args = new GameEndArgs(player);
+            send(CommandString.GAME_END, args);
 
         }
 
@@ -98,6 +154,10 @@ public class CoreClient {
         protected Map<String, C4ProcessFunction<I, ? extends C4Args>> getProcessMap() {
             Map<String, C4ProcessFunction<I, ? extends C4Args>> processMap = new HashMap<>();
             processMap.put(CommandString.ACCEPT, new Accept<>());
+            processMap.put(CommandString.START_GAME, new StartGame<>());
+            processMap.put(CommandString.REQUEST_MOVE, new RequestMove<>());
+            processMap.put(CommandString.DONE_MOVE, new DoneMove<>());
+            processMap.put(CommandString.GAME_END, new GameEnd<>());
             processMap.put(CommandString.ERROR, new Error<>());
             return processMap;
         }
@@ -115,6 +175,59 @@ public class CoreClient {
 
             iface.accept(args.groupNumber.getValue(), args.extensionList.getValue());
 
+        }
+    }
+
+    public static class StartGame<I extends Iface> extends C4ProcessFunction<I, StartGameArgs> {
+
+        @Override
+        public StartGameArgs getEmptyArgsInstance() {
+            return new StartGameArgs();
+        }
+
+        @Override
+        protected void perform(StartGameArgs args, I iface) {
+            iface.startGame(args.player1.getValue(), args.player2.getValue());
+        }
+    }
+
+    public static class RequestMove<I extends Iface> extends C4ProcessFunction<I, RequestMoveArgs> {
+
+        @Override
+        public RequestMoveArgs getEmptyArgsInstance() {
+            return new RequestMoveArgs();
+        }
+
+        @Override
+        protected void perform(RequestMoveArgs args, I iface) {
+            iface.requestMove(args.player.getValue());
+        }
+
+    }
+
+    public static class DoneMove<I extends Iface> extends C4ProcessFunction<I, DoneMoveArgs> {
+
+        @Override
+        public DoneMoveArgs getEmptyArgsInstance() {
+            return new DoneMoveArgs();
+        }
+
+        @Override
+        protected void perform(DoneMoveArgs args, I iface) {
+            iface.doneMove(args.player.getValue(), args.column.getValue());
+        }
+    }
+
+    public static class GameEnd<I extends Iface> extends C4ProcessFunction<I, GameEndArgs> {
+
+        @Override
+        public GameEndArgs getEmptyArgsInstance() {
+            return new GameEndArgs();
+        }
+
+        @Override
+        protected void perform(GameEndArgs args, I iface) {
+            iface.gameEnd(args.winner.getValue());
         }
     }
 
@@ -165,6 +278,146 @@ public class CoreClient {
         }
     }
 
+    public static class StartGameArgs implements C4Args {
+
+        PlayerName player1;
+        PlayerName player2;
+
+        public StartGameArgs() {
+            player1 = new PlayerName();
+            player2 = new PlayerName();
+        }
+
+        public StartGameArgs(String p1, String p2) {
+            try {
+                player1 = new PlayerName(p1);
+                player2 = new PlayerName(p2);
+            } catch (ParameterFormatException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        @Override
+        public String[] getArgArray() {
+            return new String[]{
+                    player1.serialize(),
+                    player2.serialize()
+            };
+        }
+
+        @Override
+        public void read(String argString) throws C4Exception {
+            String[] args = argString.split(" ", 2);
+            if (args.length < 2) {
+                throw new SyntaxError("Wrong amount of playernames");
+            } else {
+                player1.read(args[0]);
+                player2.read(args[1]);
+            }
+
+
+        }
+
+    }
+
+    public static class RequestMoveArgs implements C4Args {
+
+        PlayerName player;
+
+        public RequestMoveArgs() {
+            player = new PlayerName();
+        }
+
+        public RequestMoveArgs(String p) {
+            try {
+                player = new PlayerName(p);
+            } catch (ParameterFormatException e) {
+                e.printStackTrace();
+            }
+        }
+
+        @Override
+        public String[] getArgArray() {
+            return new String[]{
+                    player.serialize()
+            };
+        }
+
+        @Override
+        public void read(String argString) throws C4Exception {
+            player.read(argString);
+        }
+
+    }
+
+    public static class DoneMoveArgs implements C4Args {
+
+        PlayerName player;
+        Column column;
+
+        public DoneMoveArgs() {
+            player = new PlayerName();
+            column = new Column();
+        }
+
+        public DoneMoveArgs(String p, int c) {
+            try {
+                player = new PlayerName(p);
+            } catch (ParameterFormatException e) {
+                e.printStackTrace();
+            }
+            column = new Column(c);
+        }
+
+        public String[] getArgArray() {
+            return new String[]{
+                    player.serialize(),
+                    column.serialize()
+            };
+        }
+
+        public void read(String argString) throws C4Exception {
+
+            String[] args = argString.split(" ");
+            if (args.length < 2) {
+                throw new SyntaxError("Too few parameters given");
+            } else {
+                player.read(args[0]);
+                column.read(args[1]);
+            }
+
+
+        }
+    }
+
+    public static class GameEndArgs implements C4Args {
+
+        PlayerName winner;
+
+        public GameEndArgs() {
+            winner = new PlayerName();
+        }
+
+        public GameEndArgs(String win) {
+            try {
+                winner = new PlayerName(win);
+            } catch (ParameterFormatException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public String[] getArgArray() {
+            return new String[]{
+                    winner.serialize()
+            };
+        }
+
+        public void read(String argString) throws C4Exception {
+            winner.read(argString);
+        }
+    }
+
     public static class ErrorArgs implements C4Args {
         ErrorCode errorCode;
 
@@ -187,13 +440,5 @@ public class CoreClient {
             errorCode.read(argString);
         }
     }
-
-// ------------------ Instance variables ----------------
-
-// --------------------- Constructors -------------------
-
-// ----------------------- Queries ----------------------
-
-// ----------------------- Commands ---------------------
 
 }

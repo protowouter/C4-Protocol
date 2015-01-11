@@ -32,6 +32,7 @@ import nl.woutertimmermans.connect4.protocol.constants.CommandString;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
 import nl.woutertimmermans.connect4.protocol.exceptions.SyntaxError;
+import nl.woutertimmermans.connect4.protocol.parameters.Column;
 import nl.woutertimmermans.connect4.protocol.parameters.ExtensionList;
 import nl.woutertimmermans.connect4.protocol.parameters.GroupNumber;
 import nl.woutertimmermans.connect4.protocol.parameters.PlayerName;
@@ -58,6 +59,12 @@ public class CoreServer {
 
     public interface Iface {
         public void join(String pName, int gNumber, Set<String> exts) throws C4Exception;
+
+        public void ready() throws C4Exception;
+
+        public void doMove(int col) throws C4Exception;
+
+
     }
 
     public static class Client extends C4Client implements Iface {
@@ -72,11 +79,37 @@ public class CoreServer {
 
         }
 
+        public void ready() throws C4Exception {
+
+            sendReady();
+
+        }
+
+        public void doMove(int col) {
+
+            sendDoMove(col);
+
+        }
+
         private void sendJoin(String pName, int gNumber, Set<String> exts) throws C4Exception {
 
             JoinArgs args = new JoinArgs(pName, gNumber, exts);
 
             send(CommandString.JOIN, args);
+
+        }
+
+        private void sendReady() throws C4Exception {
+
+            send(CommandString.READY, null);
+
+        }
+
+        private void sendDoMove(int col) {
+
+            DoMoveArgs args = new DoMoveArgs(col);
+
+            send(CommandString.DO_MOVE, args);
 
         }
 
@@ -89,7 +122,9 @@ public class CoreServer {
 
         protected Map<String, C4ProcessFunction<I, ? extends C4Args>> getProcessMap() {
             Map<String, C4ProcessFunction<I, ? extends C4Args>> processMap = new HashMap<>();
-            processMap.put("join", new Join<>());
+            processMap.put(CommandString.JOIN, new Join<>());
+            processMap.put(CommandString.READY, new Ready<>());
+            processMap.put(CommandString.DO_MOVE, new DoMove<>());
             return processMap;
         }
     }
@@ -108,10 +143,49 @@ public class CoreServer {
         @Override
         public void perform(JoinArgs args, I iface) throws C4Exception {
 
-            iface.join(args.playerName.getValue(), args.groupNumber.getValue(), args.exts.getValue());
+            iface.join(args.playerName.getValue(),
+                    args.groupNumber.getValue(), args.exts.getValue());
 
 
         }
+    }
+
+    public static class Ready<I extends Iface> extends C4ProcessFunction<I, ReadyArgs> {
+
+        public Ready() {
+            super();
+        }
+
+        @Override
+        public ReadyArgs getEmptyArgsInstance() {
+            return new ReadyArgs();
+        }
+
+        @Override
+        public void perform(ReadyArgs args, I iface) throws C4Exception {
+
+            iface.ready();
+
+        }
+
+    }
+
+    public static class DoMove<I extends Iface> extends C4ProcessFunction<I, DoMoveArgs> {
+
+        public DoMove() {
+            super();
+        }
+
+        @Override
+        public DoMoveArgs getEmptyArgsInstance() {
+            return new DoMoveArgs();
+        }
+
+        @Override
+        public void perform(DoMoveArgs args, I iface) throws C4Exception {
+            iface.doMove(args.column.getValue());
+        }
+
     }
 
 
@@ -155,6 +229,48 @@ public class CoreServer {
             exts = new ExtensionList();
             exts.read(args.length >= 3 ? args[2] : "");
 
+        }
+    }
+
+    public static class ReadyArgs implements C4Args {
+
+        public ReadyArgs() {
+
+        }
+
+        @Override
+        public String[] getArgArray() {
+            return new String[0];
+        }
+
+        @Override
+        public void read(String argString) throws C4Exception {
+
+        }
+    }
+
+    public static class DoMoveArgs implements C4Args {
+
+        Column column;
+
+        public DoMoveArgs() {
+
+            column = new Column();
+
+        }
+
+        public DoMoveArgs(int col) {
+            column = new Column(col);
+        }
+
+        @Override
+        public String[] getArgArray() {
+            return new String[]{column.serialize()};
+        }
+
+        @Override
+        public void read(String argString) throws C4Exception {
+            column.read(argString);
         }
     }
 

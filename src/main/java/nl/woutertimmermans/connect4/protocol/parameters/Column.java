@@ -22,39 +22,49 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.base;
+package nl.woutertimmermans.connect4.protocol.parameters;
 
-import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
 
-/**
- * Models an collection of arguments of arbitrary length.
- * This abstract class provides facilities for both generating
- * strings and parsing from strings.
- */
-
-public interface C4Args {
+public class Column implements Parameter {
 
 // ------------------ Instance variables ----------------
 
+    private int column;
+
 // --------------------- Constructors -------------------
+
+    public Column() {
+
+    }
+
+    public Column(int c) {
+        column = c;
+    }
 
 // ----------------------- Queries ----------------------
 
-    abstract String[] getArgArray();
+    @Override
+    public Integer getValue() {
+        return column;
+    }
 
+    @Override
+    public String serialize() {
+        return Integer.toString(column);
+    }
 
 // ----------------------- Commands ---------------------
 
-    public default String serialize() {
-        String[] args = getArgArray();
-        StringBuilder result = new StringBuilder();
-        for (String s : args) {
-            result.append(s);
-            result.append(" ");
-        }
-        return result.toString();
-    }
+    @Override
+    public void read(String argString) throws ParameterFormatException {
 
-    public abstract void read(String argString) throws C4Exception;
+        try {
+            column = Integer.parseInt(argString);
+        } catch (NumberFormatException e) {
+            throw new ParameterFormatException(e.getMessage());
+        }
+
+    }
 
 }

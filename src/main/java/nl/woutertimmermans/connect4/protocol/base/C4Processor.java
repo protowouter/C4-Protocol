@@ -25,12 +25,12 @@
 package nl.woutertimmermans.connect4.protocol.base;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
-import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
 
 import java.util.Map;
 
 /**
- * An processor is an object that translates an string received from the network to method calls on local objects.
+ * An processor is an object that translates an string received
+ * from the network to method calls on local objects.
  *
  * @param <I>
  */
