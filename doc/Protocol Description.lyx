@@ -912,8 +912,10 @@ The board is 7 columns wide and 6 rows high.
 \end_layout
 
 \begin_layout Itemize
-The difficulty for the tournament AI is 10 seconds ( This is just a placeholder
- value which can be decided upon at a later time).
+At the tournament, the maximum time the AI is allowed to think about a move
+ is 10 seconds.
+ ( This is just a placeholder value which can be decided upon at a later
+ time).
 \end_layout
 
 \begin_layout Section
@@ -931,8 +933,7 @@ name "sec:Client-states"
 During the lifetime of its connection to the server the client can be in
  a number of states.
  The state of the client determines the commands the client is allowed to
- send to the server and the commands the server is allowed to send to the
- client.
+ send to the server and visa versa.
  It is possible for the client to be in multiple states at the same time.
  These states do not have to be implemented in the server implementation.
  They are however a way to reason about which command is defined to be used
@@ -1083,12 +1084,13 @@ name "005-Cannot-challenge"
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-007 Invalid command
+007 Invalid command (command doesn't exist)
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-008 Command not valid in this context
+008 Command not valid in this context (command exists, but you are not allowed
+ to use it at the moment)
 \end_layout
 
 \begin_layout Labeling
@@ -1129,7 +1131,7 @@ reference "sub:Core"
 
  group.
  If a client or server has signaled the other end of the connection it supports
- an optional function group it MUST implement the function group.
+ an optional function group, it MUST implement the function group.
  The client or server MAY implement other function groups.
  A client or server MUST NOT send a command in an optional function group
  that is not acknowledged to be supported by the other end of the connection.
@@ -1215,7 +1217,7 @@ name "par:ready"
 \begin_layout Standard
 After the server has accepted the client's connection, the server is waiting
  for the client to signal it is ready to play a game.
- When the client sends the ready command to the server the server SHOULD
+ When the client sends the ready command to the server, the server SHOULD
  send the 
 \begin_inset CommandInset ref
 LatexCommand nameref
@@ -1264,7 +1266,7 @@ name "par:do-move"
 This command is used by the client to signal the server it has decided on
  a move.
  This is only allowed if the server has previously sent the request move
- command and this client has since then not sent a do move command.
+ command and since then this client has not sent a do move command.
  The client MUST include the col parameter.
  To send this command the client MUST be in the Game state 
 \begin_inset CommandInset ref
@@ -1362,7 +1364,7 @@ reference "par:ready"
 
 \end_inset
 
- command the server SHOULD send the start game command to these two players
+ command, the server SHOULD send the start game command to these two players
  containing both the player names.
  The server MUST include two player names in the command.
  These two names MUST NOT be the same.
@@ -1404,7 +1406,8 @@ name "par:request-move"
 \begin_layout Standard
 When the server has determined that according to the game rules it is the
  turn of a Client to make a move, the server MUST send the request move
- command to all clients in the game with as argument the name of said client.
+ command to all clients in the game with as argument the name of the client
+ mentioned earlier.
  The server MUST only send this command if the client is in the Game state
  
 \begin_inset CommandInset ref
@@ -1449,8 +1452,8 @@ reference "par:do-move"
 \end_inset
 
  command from a client and has determined that the move is valid it MUST
- send the done move command to all players in the game with the player name
- of the client which has done the move and the column of the move.
+ send the done move command to all players in the game, with the player
+ name of the client which has done the move and the column of the move.
  The server MUST only send this command if the client is in the Game state
  
 \begin_inset CommandInset ref
@@ -1488,7 +1491,7 @@ name "par:game-end"
 
 \begin_layout Standard
 When the server has decided that according to the rules of Connect4 the
- game has ended in a draw or a player has won it MUST send the game end
+ game has ended in a draw or a player has won, it MUST send the game end
  command to all players in the game.
  If the game ended in a draw the server MUST NOT include a player name.
  If a player has won the game the server MUST include the name of this player.
@@ -1629,10 +1632,10 @@ name "par:state-change"
 \end_layout
 
 \begin_layout Standard
-When a client which is in the lobby changes from one of the above mentioned
- states, the server MUST send the state change command to all clients supporting
+When the state of a client in the lobby changes from one of the states mentioned
+ above, the server MUST send the state change command to all clients supporting
  the Lobby extension.
- The server MUST NOT send this command to clients which are not in the Lobby
+ The server MUST NOT send this command to clients that are not in the Lobby
  state 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -1642,7 +1645,7 @@ reference "sec:Client-states"
 
 .
  The server MUST include the player-name from which the state has changed.
- The server MUST include the state in which the client currently is.
+ The server MUST include the current state of the client.
 \end_layout
 
 \begin_layout Labeling
@@ -1781,8 +1784,8 @@ message
 \begin_layout Standard
 This command is used by the Server to send a chat message to a client in
  response to receipt of either the global chat or local chat command.
- This command MUST NOT be sent to clients which are not in the Accepted
- state 
+ This command MUST NOT be sent to clients if the clients are not in the
+ Accepted state 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:Client-states"
@@ -1947,7 +1950,7 @@ Leaderboard
 \end_layout
 
 \begin_layout Standard
-At this time there is too much unknown to offer an proposal for an leaderboard
+At this time there is too much unknown to offer a proposal for an leaderboard
  protocol extension.
 \end_layout
 
@@ -1974,8 +1977,9 @@ STARTTLS
 
 \begin_layout Standard
 Servers which wish to enhance the security level of the server can support
- the security extension which will support both secure connections and authentic
-ation of the server and the client.
+ the security extension.
+ This will support both secure connections and authentication of the server
+ and the client.
  To enable the client and server to securely communicate the TLS 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -1997,8 +2001,8 @@ key "ietf-tls-docs"
 \end_layout
 
 \begin_layout Standard
-A server which also wants to offer secured connections MUST listen to a
- second port for secured connections.
+A server that wants to offer secured connections MUST listen to a second
+ port for secured connections.
  
 \end_layout
 
@@ -2011,7 +2015,7 @@ starttls
 \end_layout
 
 \begin_layout Standard
-The server can send this command to a client it wishes to have a secure
+The server can send this command to the client it wishes to have a secure
  connection with.
  The client MUST be in the accepted state 
 \begin_inset CommandInset ref
@@ -2114,6 +2118,11 @@ Let the error command have an optional message parameter in order to give
 
 \begin_layout Itemize
 8.6 Security extension has preliminary status at this time
+\end_layout
+
+\begin_layout Itemize
+Let error code 006 and 007 be one error code in stead of two different error
+ codes.
 \end_layout
 
 \begin_layout Standard
