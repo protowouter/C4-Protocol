@@ -2119,7 +2119,7 @@ Let the error command have an optional message parameter in order to give
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "INF3 protocol references,/Users/woutertimmermans/BT-Sync/Documents/Studie/Inspiratie/RFC bibtex/10-01-2015/rfc"
+bibfiles "INF3 protocol references"
 options "bibtotoc,plainurl"
 
 \end_inset
