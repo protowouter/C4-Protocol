@@ -2121,8 +2121,9 @@ Let the error command have an optional message parameter in order to give
 \end_layout
 
 \begin_layout Itemize
-Let error code 006 and 007 be one error code in stead of two different error
+Let error code 007 and 008 be one error code in stead of two different error
  codes.
+ Always use invalid command.
 \end_layout
 
 \begin_layout Standard

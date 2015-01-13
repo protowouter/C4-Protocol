@@ -35,7 +35,7 @@
 
     <groupId>nl.woutertimmermans.connect4</groupId>
     <artifactId>c4-protocol</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.3</version>
 
     <licenses>
         <license>
