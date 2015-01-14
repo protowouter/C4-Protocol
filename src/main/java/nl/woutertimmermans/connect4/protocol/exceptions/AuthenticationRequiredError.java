@@ -26,20 +26,12 @@ package nl.woutertimmermans.connect4.protocol.exceptions;
 
 import nl.woutertimmermans.connect4.protocol.constants.ErrorCodes;
 
-public class SyntaxError extends C4Exception {
-
-// ------------------ Instance variables ----------------
+public class AuthenticationRequiredError extends C4Exception {
 
 // --------------------- Constructors -------------------
 
-    public SyntaxError(String message) {
-
-        super(ErrorCodes.SYNTAX_ERROR, message);
-
+    public AuthenticationRequiredError(String message) {
+        super(ErrorCodes.AUTH_REQUIRED, message);
     }
-
-// ----------------------- Queries ----------------------
-
-// ----------------------- Commands ---------------------
 
 }

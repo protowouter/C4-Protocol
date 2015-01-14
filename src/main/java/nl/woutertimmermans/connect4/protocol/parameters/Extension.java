@@ -25,7 +25,7 @@
 package nl.woutertimmermans.connect4.protocol.parameters;
 
 import nl.woutertimmermans.connect4.protocol.constants.ParameterRegex;
-import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
+import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 
 public class Extension implements Parameter {
 
@@ -64,7 +64,7 @@ public class Extension implements Parameter {
 // ----------------------- Commands ---------------------
 
     @Override
-    public void read(String argString) throws ParameterFormatException {
+    public void read(String argString) throws InvalidParameterError {
 
 
 

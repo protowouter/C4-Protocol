@@ -22,24 +22,19 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.exceptions;
+package nl.woutertimmermans.connect4.protocol.constants;
 
-import nl.woutertimmermans.connect4.protocol.constants.ErrorCodes;
+public interface ErrorCodes {
 
-public class SyntaxError extends C4Exception {
-
-// ------------------ Instance variables ----------------
-
-// --------------------- Constructors -------------------
-
-    public SyntaxError(String message) {
-
-        super(ErrorCodes.SYNTAX_ERROR, message);
-
-    }
-
-// ----------------------- Queries ----------------------
-
-// ----------------------- Commands ---------------------
+    public static int GENERIC = 1;
+    public static int INVALID_MOVE = 2;
+    public static int PLAYER_DISCONNECT = 3;
+    public static int INVALID_USERNAME = 4;
+    public static int CANNOT_CHALLENGE_PLAYER = 5;
+    public static int INVALID_CHAT_MESSAGE = 6;
+    public static int INVALID_COMMAND = 7;
+    public static int INVALID_PARAMETER = 8;
+    public static int SYNTAX_ERROR = 9;
+    public static int AUTH_REQUIRED = 10;
 
 }

@@ -24,13 +24,13 @@
 
 package nl.woutertimmermans.connect4.protocol.parameters;
 
-import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
+import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 
 public interface Parameter<T> {
 
     public String serialize();
 
-    public void read(String argString) throws ParameterFormatException;
+    public void read(String argString) throws InvalidParameterError;
 
     public T getValue();
 

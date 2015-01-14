@@ -26,20 +26,12 @@ package nl.woutertimmermans.connect4.protocol.exceptions;
 
 import nl.woutertimmermans.connect4.protocol.constants.ErrorCodes;
 
-public class SyntaxError extends C4Exception {
-
-// ------------------ Instance variables ----------------
+public class InvalidChatmessageError extends C4Exception {
 
 // --------------------- Constructors -------------------
 
-    public SyntaxError(String message) {
-
-        super(ErrorCodes.SYNTAX_ERROR, message);
-
+    public InvalidChatmessageError(String message) {
+        super(ErrorCodes.INVALID_CHAT_MESSAGE, message);
     }
-
-// ----------------------- Queries ----------------------
-
-// ----------------------- Commands ---------------------
 
 }

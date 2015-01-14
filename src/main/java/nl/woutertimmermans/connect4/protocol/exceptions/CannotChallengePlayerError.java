@@ -26,20 +26,12 @@ package nl.woutertimmermans.connect4.protocol.exceptions;
 
 import nl.woutertimmermans.connect4.protocol.constants.ErrorCodes;
 
-public class SyntaxError extends C4Exception {
-
-// ------------------ Instance variables ----------------
+public class CannotChallengePlayerError extends C4Exception {
 
 // --------------------- Constructors -------------------
 
-    public SyntaxError(String message) {
-
-        super(ErrorCodes.SYNTAX_ERROR, message);
-
+    public CannotChallengePlayerError(String message) {
+        super(ErrorCodes.CANNOT_CHALLENGE_PLAYER, message);
     }
-
-// ----------------------- Queries ----------------------
-
-// ----------------------- Commands ---------------------
 
 }

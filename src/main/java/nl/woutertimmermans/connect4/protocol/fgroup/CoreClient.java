@@ -30,7 +30,7 @@ import nl.woutertimmermans.connect4.protocol.base.C4ProcessFunction;
 import nl.woutertimmermans.connect4.protocol.base.C4Processor;
 import nl.woutertimmermans.connect4.protocol.constants.CommandString;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
-import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
+import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 import nl.woutertimmermans.connect4.protocol.exceptions.SyntaxError;
 import nl.woutertimmermans.connect4.protocol.parameters.*;
 
@@ -292,7 +292,7 @@ public class CoreClient {
             try {
                 player1 = new PlayerName(p1);
                 player2 = new PlayerName(p2);
-            } catch (ParameterFormatException e) {
+            } catch (InvalidParameterError e) {
                 e.printStackTrace();
             }
 
@@ -332,7 +332,7 @@ public class CoreClient {
         public RequestMoveArgs(String p) {
             try {
                 player = new PlayerName(p);
-            } catch (ParameterFormatException e) {
+            } catch (InvalidParameterError e) {
                 e.printStackTrace();
             }
         }
@@ -364,7 +364,7 @@ public class CoreClient {
         public DoneMoveArgs(String p, int c) {
             try {
                 player = new PlayerName(p);
-            } catch (ParameterFormatException e) {
+            } catch (InvalidParameterError e) {
                 e.printStackTrace();
             }
             column = new Column(c);
@@ -402,7 +402,7 @@ public class CoreClient {
         public GameEndArgs(String win) {
             try {
                 winner = new PlayerName(win);
-            } catch (ParameterFormatException e) {
+            } catch (InvalidParameterError e) {
                 e.printStackTrace();
             }
         }

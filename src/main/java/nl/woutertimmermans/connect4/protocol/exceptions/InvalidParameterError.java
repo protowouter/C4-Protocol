@@ -26,16 +26,14 @@ package nl.woutertimmermans.connect4.protocol.exceptions;
 
 import nl.woutertimmermans.connect4.protocol.constants.ErrorCodes;
 
-public class SyntaxError extends C4Exception {
+public class InvalidParameterError extends C4Exception {
 
 // ------------------ Instance variables ----------------
 
 // --------------------- Constructors -------------------
 
-    public SyntaxError(String message) {
-
-        super(ErrorCodes.SYNTAX_ERROR, message);
-
+    public InvalidParameterError(String message) {
+        super(ErrorCodes.INVALID_PARAMETER, message);
     }
 
 // ----------------------- Queries ----------------------

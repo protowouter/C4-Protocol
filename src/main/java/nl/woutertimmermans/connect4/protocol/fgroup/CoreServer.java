@@ -30,7 +30,7 @@ import nl.woutertimmermans.connect4.protocol.base.C4ProcessFunction;
 import nl.woutertimmermans.connect4.protocol.base.C4Processor;
 import nl.woutertimmermans.connect4.protocol.constants.CommandString;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
-import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
+import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 import nl.woutertimmermans.connect4.protocol.exceptions.SyntaxError;
 import nl.woutertimmermans.connect4.protocol.parameters.Column;
 import nl.woutertimmermans.connect4.protocol.parameters.ExtensionList;
@@ -195,7 +195,7 @@ public class CoreServer {
         GroupNumber groupNumber;
         ExtensionList exts;
 
-        public JoinArgs(String pName, int gNumber, Set<String> es) throws ParameterFormatException {
+        public JoinArgs(String pName, int gNumber, Set<String> es) throws InvalidParameterError {
             playerName = new PlayerName(pName);
             groupNumber = new GroupNumber(gNumber);
             exts = new ExtensionList(es);

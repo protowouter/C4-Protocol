@@ -24,12 +24,12 @@
 
 package nl.woutertimmermans.connect4.protocol.parameters;
 
-import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
+import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 
 import java.util.HashSet;
 import java.util.Set;
 
-public class ExtensionList implements Parameter {
+public class ExtensionList implements Parameter<Set<String>> {
 
 // ------------------ Instance variables ----------------
 
@@ -67,7 +67,7 @@ public class ExtensionList implements Parameter {
 // ----------------------- Commands ---------------------
 
     @Override
-    public void read(String argString) throws ParameterFormatException {
+    public void read(String argString) throws InvalidParameterError {
 
         extensions = new HashSet<>();
 

@@ -24,9 +24,9 @@
 
 package nl.woutertimmermans.connect4.protocol.parameters;
 
-import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
+import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 
-public class Column implements Parameter {
+public class Column implements Parameter<Integer> {
 
 // ------------------ Instance variables ----------------
 
@@ -57,12 +57,12 @@ public class Column implements Parameter {
 // ----------------------- Commands ---------------------
 
     @Override
-    public void read(String argString) throws ParameterFormatException {
+    public void read(String argString) throws InvalidParameterError {
 
         try {
             column = Integer.parseInt(argString);
         } catch (NumberFormatException e) {
-            throw new ParameterFormatException(e.getMessage());
+            throw new InvalidParameterError(e.getMessage());
         }
 
     }

@@ -25,7 +25,7 @@
 package nl.woutertimmermans.connect4.protocol.parameters;
 
 import nl.woutertimmermans.connect4.protocol.constants.ParameterRegex;
-import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
+import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 public class PlayerName implements Parameter {
 
 // ------------------ Instance variables ----------------
@@ -35,9 +35,9 @@ public class PlayerName implements Parameter {
 
 // --------------------- Constructors -------------------
 
-    public PlayerName(String pName) throws ParameterFormatException {
+    public PlayerName(String pName) throws InvalidParameterError {
         if (!validName(pName)) {
-            throw new ParameterFormatException("name does not conform to regex: " + NAME_REGEX);
+            throw new InvalidParameterError("name does not conform to regex: " + NAME_REGEX);
         } else {
             playerName = pName;
         }
@@ -66,12 +66,12 @@ public class PlayerName implements Parameter {
 
 // ----------------------- Commands ---------------------
 
-    public void read(String name) throws ParameterFormatException {
+    public void read(String name) throws InvalidParameterError {
 
         if (validName(name)) {
             playerName = name;
         } else {
-            throw new ParameterFormatException("name does not conform to regex: " + NAME_REGEX);
+            throw new InvalidParameterError("name does not conform to regex: " + NAME_REGEX);
         }
 
     }

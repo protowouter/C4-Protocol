@@ -24,7 +24,7 @@
 
 package nl.woutertimmermans.connect4.protocol.parameters;
 
-import nl.woutertimmermans.connect4.protocol.exceptions.ParameterFormatException;
+import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 
 public class ErrorCode implements Parameter {
 
@@ -57,12 +57,12 @@ public class ErrorCode implements Parameter {
 // ----------------------- Commands ---------------------
 
     @Override
-    public void read(String argString) throws ParameterFormatException {
+    public void read(String argString) throws InvalidParameterError {
 
         try {
             errorCode = Integer.parseInt(argString);
         } catch (NumberFormatException e) {
-            throw new ParameterFormatException(e.getMessage());
+            throw new InvalidParameterError(e.getMessage());
         }
 
     }

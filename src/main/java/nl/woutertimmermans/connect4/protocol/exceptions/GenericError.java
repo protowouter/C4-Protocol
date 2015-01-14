@@ -24,18 +24,14 @@
 
 package nl.woutertimmermans.connect4.protocol.exceptions;
 
-public class ParameterFormatException extends C4Exception {
+import nl.woutertimmermans.connect4.protocol.constants.ErrorCodes;
 
-// ------------------ Instance variables ----------------
+public class GenericError extends C4Exception {
 
 // --------------------- Constructors -------------------
 
-    public ParameterFormatException(String message) {
-        super(10, message);
+    public GenericError(String message) {
+        super(ErrorCodes.GENERIC, message);
     }
-
-// ----------------------- Queries ----------------------
-
-// ----------------------- Commands ---------------------
 
 }
