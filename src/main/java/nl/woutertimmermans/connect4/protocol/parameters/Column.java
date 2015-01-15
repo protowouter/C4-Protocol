@@ -44,19 +44,16 @@ public class Column implements Parameter<Integer> {
 
 // ----------------------- Queries ----------------------
 
-    @Override
     public Integer getValue() {
         return column;
     }
 
-    @Override
     public String serialize() {
         return Integer.toString(column);
     }
 
 // ----------------------- Commands ---------------------
 
-    @Override
     public void read(String argString) throws InvalidParameterError {
 
         try {

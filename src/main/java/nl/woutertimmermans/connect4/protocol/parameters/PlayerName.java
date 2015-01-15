@@ -26,6 +26,9 @@ package nl.woutertimmermans.connect4.protocol.parameters;
 
 import nl.woutertimmermans.connect4.protocol.constants.ParameterRegex;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
+
+import java.util.logging.Logger;
+
 public class PlayerName implements Parameter {
 
 // ------------------ Instance variables ----------------
@@ -67,6 +70,10 @@ public class PlayerName implements Parameter {
 // ----------------------- Commands ---------------------
 
     public void read(String name) throws InvalidParameterError {
+
+        for (char c : name.toCharArray()) {
+            Logger.getGlobal().info("char: " + c);
+        }
 
         if (validName(name)) {
             playerName = name;

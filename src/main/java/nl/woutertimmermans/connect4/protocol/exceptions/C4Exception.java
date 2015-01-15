@@ -43,6 +43,10 @@ public class C4Exception extends Exception {
         return errorCode;
     }
 
+    public String toString() {
+        return "Error " + errorCode + ": " + getMessage();
+    }
+
 // ----------------------- Commands ---------------------
 
 }

@@ -101,7 +101,8 @@ public class CoreServer {
 
         private void sendReady() throws C4Exception {
 
-            send(CommandString.READY, null);
+            ReadyArgs args = new ReadyArgs();
+            send(CommandString.READY, args);
 
         }
 
@@ -121,10 +122,11 @@ public class CoreServer {
         }
 
         protected Map<String, C4ProcessFunction<I, ? extends C4Args>> getProcessMap() {
-            Map<String, C4ProcessFunction<I, ? extends C4Args>> processMap = new HashMap<>();
-            processMap.put(CommandString.JOIN, new Join<>());
-            processMap.put(CommandString.READY, new Ready<>());
-            processMap.put(CommandString.DO_MOVE, new DoMove<>());
+            Map<String, C4ProcessFunction<I, ? extends C4Args>> processMap =
+                    new HashMap<String, C4ProcessFunction<I, ? extends C4Args>>();
+            processMap.put(CommandString.JOIN, new Join<I>());
+            processMap.put(CommandString.READY, new Ready<I>());
+            processMap.put(CommandString.DO_MOVE, new DoMove<I>());
             return processMap;
         }
     }
@@ -189,7 +191,7 @@ public class CoreServer {
     }
 
 
-    public static class JoinArgs implements C4Args {
+    public static class JoinArgs extends C4Args {
 
         PlayerName playerName;
         GroupNumber groupNumber;
@@ -232,7 +234,7 @@ public class CoreServer {
         }
     }
 
-    public static class ReadyArgs implements C4Args {
+    public static class ReadyArgs extends C4Args {
 
         public ReadyArgs() {
 
@@ -249,7 +251,7 @@ public class CoreServer {
         }
     }
 
-    public static class DoMoveArgs implements C4Args {
+    public static class DoMoveArgs extends C4Args {
 
         Column column;
 

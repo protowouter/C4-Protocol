@@ -65,34 +65,28 @@ public class CoreClient {
             super(out);
         }
 
-        @Override
         public void accept(int gNumber, Set<String> exts) {
 
             sendAccept(gNumber, exts);
 
         }
 
-        @Override
         public void startGame(String p1, String p2) {
             sendStartGame(p1, p2);
         }
 
-        @Override
         public void requestMove(String player) {
             sendRequestMove(player);
         }
 
-        @Override
         public void doneMove(String player, int col) {
             sendDoneMove(player, col);
         }
 
-        @Override
         public void gameEnd(String player) {
             sendGameEnd(player);
         }
 
-        @Override
         public void error(int eCode) {
 
             sendError(eCode);
@@ -146,19 +140,20 @@ public class CoreClient {
 
     public static class Processor<I extends Iface> extends C4Processor<I> {
 
-        public Processor(I interf, Map<String, C4ProcessFunction<I, ? extends C4Args>> fMap) {
+        public Processor(I interf) {
             super(interf);
         }
 
         @Override
         protected Map<String, C4ProcessFunction<I, ? extends C4Args>> getProcessMap() {
-            Map<String, C4ProcessFunction<I, ? extends C4Args>> processMap = new HashMap<>();
-            processMap.put(CommandString.ACCEPT, new Accept<>());
-            processMap.put(CommandString.START_GAME, new StartGame<>());
-            processMap.put(CommandString.REQUEST_MOVE, new RequestMove<>());
-            processMap.put(CommandString.DONE_MOVE, new DoneMove<>());
-            processMap.put(CommandString.GAME_END, new GameEnd<>());
-            processMap.put(CommandString.ERROR, new Error<>());
+            Map<String, C4ProcessFunction<I, ? extends C4Args>> processMap =
+                    new HashMap<String, C4ProcessFunction<I, ? extends C4Args>>();
+            processMap.put(CommandString.ACCEPT, new Accept<I>());
+            processMap.put(CommandString.START_GAME, new StartGame<I>());
+            processMap.put(CommandString.REQUEST_MOVE, new RequestMove<I>());
+            processMap.put(CommandString.DONE_MOVE, new DoneMove<I>());
+            processMap.put(CommandString.GAME_END, new GameEnd<I>());
+            processMap.put(CommandString.ERROR, new Error<I>());
             return processMap;
         }
     }
@@ -245,12 +240,15 @@ public class CoreClient {
 
     }
 
-    public static class AcceptArgs implements C4Args {
+    public static class AcceptArgs extends C4Args {
 
         GroupNumber groupNumber;
         ExtensionList extensionList;
 
         public AcceptArgs() {
+
+            groupNumber = new GroupNumber();
+            extensionList = new ExtensionList();
 
         }
 
@@ -278,7 +276,7 @@ public class CoreClient {
         }
     }
 
-    public static class StartGameArgs implements C4Args {
+    public static class StartGameArgs extends C4Args {
 
         PlayerName player1;
         PlayerName player2;
@@ -312,8 +310,8 @@ public class CoreClient {
             if (args.length < 2) {
                 throw new SyntaxError("Wrong amount of playernames");
             } else {
-                player1.read(args[0]);
-                player2.read(args[1]);
+                player1.read(args[0].trim());
+                player2.read(args[1].trim());
             }
 
 
@@ -321,7 +319,7 @@ public class CoreClient {
 
     }
 
-    public static class RequestMoveArgs implements C4Args {
+    public static class RequestMoveArgs extends C4Args {
 
         PlayerName player;
 
@@ -351,7 +349,7 @@ public class CoreClient {
 
     }
 
-    public static class DoneMoveArgs implements C4Args {
+    public static class DoneMoveArgs extends C4Args {
 
         PlayerName player;
         Column column;
@@ -391,7 +389,7 @@ public class CoreClient {
         }
     }
 
-    public static class GameEndArgs implements C4Args {
+    public static class GameEndArgs extends C4Args {
 
         PlayerName winner;
 
@@ -418,7 +416,7 @@ public class CoreClient {
         }
     }
 
-    public static class ErrorArgs implements C4Args {
+    public static class ErrorArgs extends C4Args {
         ErrorCode errorCode;
 
         public ErrorArgs() {

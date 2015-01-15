@@ -32,7 +32,7 @@ import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
  * strings and parsing from strings.
  */
 
-public interface C4Args {
+public abstract class C4Args {
 
 // ------------------ Instance variables ----------------
 
@@ -40,12 +40,12 @@ public interface C4Args {
 
 // ----------------------- Queries ----------------------
 
-    abstract String[] getArgArray();
+    public abstract String[] getArgArray();
 
 
 // ----------------------- Commands ---------------------
 
-    public default String serialize() {
+    public String serialize() {
         String[] args = getArgArray();
         StringBuilder result = new StringBuilder();
         for (String s : args) {

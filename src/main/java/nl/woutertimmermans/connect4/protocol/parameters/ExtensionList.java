@@ -38,8 +38,10 @@ public class ExtensionList implements Parameter<Set<String>> {
 // --------------------- Constructors -------------------
 
     public ExtensionList(Set<String> exts) {
-        extensions = new HashSet<>();
-        exts.forEach((String s) -> extensions.add(new Extension(s)));
+        extensions = new HashSet<Extension>();
+        for (String s : exts) {
+            extensions.add(new Extension(s));
+        }
     }
 
     public ExtensionList() {
@@ -48,7 +50,6 @@ public class ExtensionList implements Parameter<Set<String>> {
 
 // ----------------------- Queries ----------------------
 
-    @Override
     public String serialize() {
         StringBuilder res = new StringBuilder();
         for (Extension e : extensions) {
@@ -57,19 +58,20 @@ public class ExtensionList implements Parameter<Set<String>> {
         return new String(res);
     }
 
-    @Override
+
     public Set<String> getValue() {
-        Set<String> result = new HashSet<>();
-        extensions.forEach((Extension e) -> { result.add(e.serialize()); });
+        Set<String> result = new HashSet<String>();
+        for (Extension e : extensions) {
+            result.add(e.serialize());
+        }
         return result;
     }
 
 // ----------------------- Commands ---------------------
 
-    @Override
     public void read(String argString) throws InvalidParameterError {
 
-        extensions = new HashSet<>();
+        extensions = new HashSet<Extension>();
 
         for (String s : argString.split(" ")) {
             Extension ex = new Extension();
