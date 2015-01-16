@@ -28,6 +28,18 @@ import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 
 public class Message extends Parameter<String> {
 
+// ------------------ Instance variables ----------------
+
+// --------------------- Constructors -------------------
+
+    public Message () {
+        super();
+    }
+
+    public Message(String message) throws InvalidParameterError{
+        super(message);
+    }
+
 // ----------------------- Queries ----------------------
 
     @Override

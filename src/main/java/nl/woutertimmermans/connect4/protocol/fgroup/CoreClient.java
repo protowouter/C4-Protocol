@@ -56,7 +56,7 @@ public class CoreClient {
 
         public void gameEnd(String player) throws C4Exception;
 
-        public void error(int eCode) throws C4Exception;
+        public void error(int eCode, String message) throws C4Exception;
     }
 
     public static class Client extends C4Client implements Iface {
@@ -87,9 +87,9 @@ public class CoreClient {
             sendGameEnd(player);
         }
 
-        public void error(int eCode) throws C4Exception {
+        public void error(int eCode, String message) throws C4Exception {
 
-            sendError(eCode);
+            sendError(eCode, message);
 
         }
 
@@ -129,9 +129,9 @@ public class CoreClient {
 
         }
 
-        private void sendError(int eCode) throws C4Exception {
+        private void sendError(int eCode, String message) throws C4Exception {
 
-            ErrorArgs args = new ErrorArgs(eCode);
+            ErrorArgs args = new ErrorArgs(eCode, message);
 
             send(CommandString.ERROR, args);
 
@@ -235,7 +235,7 @@ public class CoreClient {
 
         @Override
         protected void perform(ErrorArgs args, I iface) throws C4Exception {
-            iface.error(args.errorCode.getValue());
+            iface.error(args.errorCode.getValue(), args.message.getValue());
         }
 
     }
@@ -424,24 +424,32 @@ public class CoreClient {
 
     public static class ErrorArgs extends C4Args {
         ErrorCode errorCode;
+        Message message;
 
         public ErrorArgs() {
-
+            errorCode = new ErrorCode();
+            message = new Message();
         }
 
-        public ErrorArgs(int eCode) throws InvalidParameterError {
+        public ErrorArgs(int eCode, String mes) throws InvalidParameterError {
             errorCode = new ErrorCode(eCode);
+            message = new Message(mes);
         }
 
         @Override
         public String[] getArgArray() {
-            return new String[]{errorCode.serialize()};
+            return new String[]{errorCode.serialize(),
+                                message.serialize()};
         }
 
         @Override
         public void read(String argString) throws C4Exception {
-            errorCode = new ErrorCode();
-            errorCode.read(argString);
+            String[] args = argString.split(" ", 2);
+            errorCode.read(args[0]);
+            if (args.length > 1) {
+                errorCode.read(args[1]);
+            }
+
         }
     }
 

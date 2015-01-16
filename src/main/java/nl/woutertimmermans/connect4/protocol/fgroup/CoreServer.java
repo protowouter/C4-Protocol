@@ -32,10 +32,7 @@ import nl.woutertimmermans.connect4.protocol.constants.CommandString;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 import nl.woutertimmermans.connect4.protocol.exceptions.SyntaxError;
-import nl.woutertimmermans.connect4.protocol.parameters.Column;
-import nl.woutertimmermans.connect4.protocol.parameters.ExtensionList;
-import nl.woutertimmermans.connect4.protocol.parameters.GroupNumber;
-import nl.woutertimmermans.connect4.protocol.parameters.PlayerName;
+import nl.woutertimmermans.connect4.protocol.parameters.*;
 
 import java.io.BufferedWriter;
 import java.util.HashMap;
@@ -64,6 +61,8 @@ public class CoreServer {
 
         public void doMove(int col) throws C4Exception;
 
+        public void error(int eCode, String message) throws C4Exception;
+
 
     }
 
@@ -90,6 +89,10 @@ public class CoreServer {
 
         }
 
+        public void error(int eCode, String message) throws C4Exception {
+            sendError(eCode, message);
+        }
+
         private void sendJoin(String pName, int gNumber, Set<String> exts) throws C4Exception {
 
             JoinArgs args = new JoinArgs(pName, gNumber, exts);
@@ -113,6 +116,11 @@ public class CoreServer {
 
         }
 
+        private void sendError(int eCode, String message) throws C4Exception {
+            ErrorArgs args = new ErrorArgs(eCode, message);
+            send(CommandString.ERROR, args);
+        }
+
     }
 
     public static class Processor<I extends Iface> extends C4Processor<I> {
@@ -126,6 +134,7 @@ public class CoreServer {
             processMap.put(CommandString.JOIN, new Join<I>());
             processMap.put(CommandString.READY, new Ready<I>());
             processMap.put(CommandString.DO_MOVE, new DoMove<I>());
+            processMap.put(CommandString.ERROR, new Error<I>());
             return processMap;
         }
     }
@@ -187,6 +196,23 @@ public class CoreServer {
             iface.doMove(args.column.getValue());
         }
 
+    }
+
+    public static class Error<I extends Iface> extends C4ProcessFunction<I, ErrorArgs> {
+
+        public Error() {
+            super();
+        }
+
+        @Override
+        public ErrorArgs getEmptyArgsInstance() {
+            return new ErrorArgs();
+        }
+
+        @Override
+        public void perform(ErrorArgs args, I iface) throws C4Exception {
+            iface.error(args.errorCode.getValue(), args.message.getValue());
+        }
     }
 
 
@@ -281,6 +307,37 @@ public class CoreServer {
         @Override
         public void read(String argString) throws C4Exception {
             column.read(argString);
+        }
+    }
+
+    public static class ErrorArgs extends C4Args {
+        ErrorCode errorCode;
+        Message message;
+
+        public ErrorArgs() {
+            errorCode = new ErrorCode();
+            message = new Message();
+        }
+
+        public ErrorArgs(int eCode, String mes) throws InvalidParameterError {
+            errorCode = new ErrorCode(eCode);
+            message = new Message(mes);
+        }
+
+        @Override
+        public String[] getArgArray() {
+            return new String[]{errorCode.serialize(),
+                    message.serialize()};
+        }
+
+        @Override
+        public void read(String argString) throws C4Exception {
+            String[] args = argString.split(" ", 2);
+            errorCode.read(args[0]);
+            if (args.length > 1) {
+                errorCode.read(args[1]);
+            }
+
         }
     }
 
