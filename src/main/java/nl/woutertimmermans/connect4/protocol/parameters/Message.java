@@ -24,44 +24,26 @@
 
 package nl.woutertimmermans.connect4.protocol.parameters;
 
-import nl.woutertimmermans.connect4.protocol.constants.ParameterRegex;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 
-public class Extension extends Parameter<String> {
-
-    static final String EXTENSION_REGEX = ParameterRegex.EXTENSION;
-
-// --------------------- Constructors -------------------
-
-    public Extension(String e) throws InvalidParameterError {
-        super(e);
-    }
-
-    public Extension() {
-        super();
-    }
+public class Message extends Parameter<String> {
 
 // ----------------------- Queries ----------------------
+
+    @Override
+    public boolean testValue(String val) {
+        return true;
+    }
 
     @Override
     public String serialize() {
         return getValue();
     }
 
-    public boolean equals(Object o) {
-        return o instanceof Extension && getValue().equals(o);
-    }
-
-    @Override
-    public boolean testValue(String val) {
-        return val.matches(EXTENSION_REGEX);
-    }
-
 // ----------------------- Commands ---------------------
 
     @Override
     public void read(String argString) throws InvalidParameterError {
-
         setValue(argString);
     }
 

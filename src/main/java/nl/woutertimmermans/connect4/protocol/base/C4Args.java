@@ -48,11 +48,13 @@ public abstract class C4Args {
     public String serialize() {
         String[] args = getArgArray();
         StringBuilder result = new StringBuilder();
-        for (String s : args) {
-            result.append(s);
-            result.append(" ");
+        for (int i = 0; i < args.length; i++) {
+            result.append(args[i]);
+            if (i < args.length - 1) {
+                result.append(" ");
+            }
         }
-        return result.toString();
+        return new String(result);
     }
 
     public abstract void read(String argString) throws C4Exception;

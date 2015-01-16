@@ -74,7 +74,6 @@ public class CoreServer {
         }
 
         public void join(String pName, int gNumber, Set<String> exts) throws C4Exception {
-            boolean valid = PlayerName.validName(pName);
             sendJoin(pName, gNumber, exts);
 
         }
@@ -85,7 +84,7 @@ public class CoreServer {
 
         }
 
-        public void doMove(int col) {
+        public void doMove(int col) throws C4Exception {
 
             sendDoMove(col);
 
@@ -106,7 +105,7 @@ public class CoreServer {
 
         }
 
-        private void sendDoMove(int col) {
+        private void sendDoMove(int col) throws C4Exception {
 
             DoMoveArgs args = new DoMoveArgs(col);
 
@@ -210,11 +209,18 @@ public class CoreServer {
 
         @Override
         public String[] getArgArray() {
-            return new String[]{
-                    playerName.serialize(),
-                    groupNumber.serialize(),
-                    exts.serialize()
-            };
+            String[] result;
+            if (exts.getValue().size() > 1) {
+                result = new String[]{playerName.serialize(),
+                        groupNumber.serialize(),
+                        exts.serialize()
+                };
+            } else {
+                result = new String[]{
+                        playerName.serialize(),
+                        groupNumber.serialize()};
+            }
+            return result;
         }
 
         @Override
@@ -229,7 +235,9 @@ public class CoreServer {
             groupNumber = new GroupNumber();
             groupNumber.read(args[1]);
             exts = new ExtensionList();
-            exts.read(args.length >= 3 ? args[2] : "");
+            if (args.length >= 3) {
+                exts.read(args[2]);
+            }
 
         }
     }
@@ -261,7 +269,7 @@ public class CoreServer {
 
         }
 
-        public DoMoveArgs(int col) {
+        public DoMoveArgs(int col) throws InvalidParameterError {
             column = new Column(col);
         }
 

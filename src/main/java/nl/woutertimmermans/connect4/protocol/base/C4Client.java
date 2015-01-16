@@ -46,7 +46,7 @@ public class C4Client {
 
 // ----------------------- Commands ---------------------
 
-    public void send(String command, C4Args args) {
+    public synchronized void send(String command, C4Args args) {
         try {
             out.write(command + " " + args.serialize());
             out.newLine();

@@ -27,59 +27,41 @@ package nl.woutertimmermans.connect4.protocol.parameters;
 import nl.woutertimmermans.connect4.protocol.constants.ParameterRegex;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 
-import java.util.logging.Logger;
-
-public class PlayerName implements Parameter {
+public class PlayerName extends Parameter<String> {
 
 // ------------------ Instance variables ----------------
 
     private static final String NAME_REGEX = ParameterRegex.PLAYER_NAME;
-    private String playerName;
 
 // --------------------- Constructors -------------------
 
     public PlayerName(String pName) throws InvalidParameterError {
-        if (!validName(pName)) {
-            throw new InvalidParameterError("name does not conform to regex: " + NAME_REGEX);
-        } else {
-            playerName = pName;
-        }
+        super(pName);
 
     }
 
     public PlayerName() {
-
+        super();
     }
 
 // ----------------------- Queries ----------------------
 
-    public static boolean validName(String name) {
+    public boolean testValue(String name) {
 
         return name.matches(NAME_REGEX);
     }
 
     public String serialize() {
-        return playerName;
+        return getValue();
     }
 
-    @Override
-    public String getValue() {
-        return playerName;
-    }
 
 // ----------------------- Commands ---------------------
 
+    @Override
     public void read(String name) throws InvalidParameterError {
 
-        for (char c : name.toCharArray()) {
-            Logger.getGlobal().info("char: " + c);
-        }
-
-        if (validName(name)) {
-            playerName = name;
-        } else {
-            throw new InvalidParameterError("name does not conform to regex: " + NAME_REGEX);
-        }
+        setValue(name);
 
     }
 

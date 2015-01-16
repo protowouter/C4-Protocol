@@ -26,32 +26,30 @@ package nl.woutertimmermans.connect4.protocol.parameters;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 
-public class GroupNumber implements Parameter {
+public class GroupNumber extends Parameter<Integer> {
 
-// ------------------ Instance variables ----------------
 
-    private int groupNumber;
 
 // --------------------- Constructors -------------------
 
-    public GroupNumber(int gNumber) {
-        groupNumber = gNumber;
+    public GroupNumber(int gNumber) throws InvalidParameterError {
+        super(gNumber);
     }
 
     public GroupNumber() {
-
+        super();
     }
 
 // ----------------------- Queries ----------------------
 
     @Override
     public String serialize() {
-        return Integer.toString(groupNumber);
+        return Integer.toString(getValue());
     }
 
     @Override
-    public Integer getValue() {
-        return groupNumber;
+    public boolean testValue(Integer val) {
+        return true;
     }
 
 // ----------------------- Commands ---------------------
@@ -60,7 +58,7 @@ public class GroupNumber implements Parameter {
     public void read(String argString) throws InvalidParameterError {
 
         try {
-            groupNumber = Integer.parseInt(argString);
+            setValue(Integer.parseInt(argString));
         } catch (NumberFormatException e) {
             throw new InvalidParameterError(e.getMessage());
         }

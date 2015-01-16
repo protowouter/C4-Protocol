@@ -26,12 +26,34 @@ package nl.woutertimmermans.connect4.protocol.parameters;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 
-public interface Parameter<T> {
+public abstract class Parameter<T> {
 
-    public String serialize();
+    private T value;
 
-    public void read(String argString) throws InvalidParameterError;
+    public Parameter(T theValue) throws InvalidParameterError {
+        setValue(theValue);
+    }
 
-    public T getValue();
+    public Parameter() {
+
+    }
+
+    public abstract String serialize();
+
+    public abstract void read(String argString) throws InvalidParameterError;
+
+    public T getValue() {
+        return value;
+    }
+
+    public void setValue(T newVal) throws InvalidParameterError {
+        if (testValue(newVal)) {
+            value = newVal;
+        } else {
+            throw new InvalidParameterError("Argument " + newVal + "is not valid");
+        }
+    }
+
+    public abstract boolean testValue(T val);
 
 }

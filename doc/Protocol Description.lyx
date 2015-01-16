@@ -92,6 +92,19 @@ Software systems 2014-2015
 
 \begin_layout Author
 Wouter Timmermans 
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+and
+\end_layout
+
+\end_inset
+
+ Luce Sandfort
 \end_layout
 
 \begin_layout Standard
@@ -875,7 +888,7 @@ column = col ;
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-chat-message = {uppercase | lowercase | numeric | space} ;
+message = {? all visible characters ?} ;
 \end_layout
 
 \begin_layout Labeling
@@ -1084,28 +1097,22 @@ name "005-Cannot-challenge"
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-007 Invalid command (command doesn't exist)
+007 Invalid command (command doesn't exist or not valid in this context)
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-008 Command not valid in this context (command exists, but you are not allowed
- to use it at the moment)
+008 Invalid parameter
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-009 Invalid parameter
+009 Syntax error
 \end_layout
 
 \begin_layout Labeling
 \labelwidthstring 00.00.0000
-010 Syntax error
-\end_layout
-
-\begin_layout Labeling
-\labelwidthstring 00.00.0000
-011 Authentication required
+010 Authentication required
 \begin_inset CommandInset label
 LatexCommand label
 name "011 Authentication required"
@@ -1135,7 +1142,7 @@ reference "sub:Core"
  The client or server MAY implement other function groups.
  A client or server MUST NOT send a command in an optional function group
  that is not acknowledged to be supported by the other end of the connection.
- 
+ All commands MUST be followed by an line ending.
 \end_layout
 
 \begin_layout Subsection
@@ -1291,6 +1298,46 @@ do_move
  , space , col ;
 \end_layout
 
+\begin_layout Paragraph
+error
+\begin_inset CommandInset label
+LatexCommand label
+name "par:error-1"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the client has determined that the command received by the server would
+ put the client in an error state the client MAY send an error command to
+ the server.
+ The server is allowed to handle the error command at it's own discretion.
+ The client MUST only send this command if the client is in the Joined or
+ Accepted state 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:Client-states"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Labeling
+\labelwidthstring 00.00.0000
+error-command = 
+\begin_inset Quotes eld
+\end_inset
+
+error
+\begin_inset Quotes erd
+\end_inset
+
+ , space , error_code , [space, message] ;
+\end_layout
+
 \begin_layout Subsubsection
 Server -> Client
 \end_layout
@@ -1367,6 +1414,7 @@ reference "par:ready"
  command, the server SHOULD send the start game command to these two players
  containing both the player names.
  The server MUST include two player names in the command.
+ The first player name MUST be the player that makes the first move.
  These two names MUST NOT be the same.
  The server MUST only send this command if the client is in the Ready state
  
@@ -1559,7 +1607,7 @@ error
 \begin_inset Quotes erd
 \end_inset
 
- , space , error_code ;
+ , space , error_code, [space, message] ;
 \end_layout
 
 \begin_layout Subsection
@@ -1725,7 +1773,7 @@ chat_global
 \begin_inset Quotes erd
 \end_inset
 
- , space , chat-message ;
+ , space , message ;
 \end_layout
 
 \begin_layout Paragraph
@@ -1770,7 +1818,7 @@ chat_local
 \begin_inset Quotes erd
 \end_inset
 
- , space , chat-message ;
+ , space , message ;
 \end_layout
 
 \begin_layout Subsubsection
@@ -1808,7 +1856,7 @@ message
 \begin_inset Quotes erd
 \end_inset
 
- , space , player-name, space , chat-message ;
+ , space , player-name, space , message ;
 \end_layout
 
 \begin_layout Subsection
@@ -2065,6 +2113,32 @@ Revisions
 10-01-2015 v0.1: initial version of this document
 \end_layout
 
+\begin_layout Enumerate
+16-01-2015 v1.0:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+Client can also send error message.
+\end_layout
+
+\begin_layout Enumerate
+Made it more clear that every command ends with a line ending.
+\end_layout
+
+\begin_layout Enumerate
+Merged invalid command and invalid command in this context errors.
+\end_layout
+
+\begin_layout Enumerate
+Error command has a optional error message.
+\end_layout
+
+\begin_layout Enumerate
+Start game command informs clients of player order.
+\end_layout
+
+\end_deeper
 \begin_layout Section
 Proposed changes
 \end_layout
@@ -2078,52 +2152,7 @@ During the lifetime of this protocol it is possible to propose changes and
 \end_layout
 
 \begin_layout Itemize
-Let the start_game command reflect player order by means of the order of
- the player names.
- If for instance 
-\begin_inset Quotes eld
-\end_inset
-
-Wouter
-\begin_inset Quotes erd
-\end_inset
-
- is the first player and 
-\begin_inset Quotes eld
-\end_inset
-
-Daniel
-\begin_inset Quotes erd
-\end_inset
-
- the second the start game command string would be 
-\begin_inset Quotes eld
-\end_inset
-
-start_game Wouter Daniel
-\begin_inset Quotes erd
-\end_inset
-
-.
-\end_layout
-
-\begin_layout Itemize
-Let the error command have an optional message parameter in order to give
- more verbose errors.
-\end_layout
-
-\begin_layout Itemize
 8.5 Leaderboard extension has preliminary status at this time.
-\end_layout
-
-\begin_layout Itemize
-8.6 Security extension has preliminary status at this time
-\end_layout
-
-\begin_layout Itemize
-Let error code 007 and 008 be one error code in stead of two different error
- codes.
- Always use invalid command.
 \end_layout
 
 \begin_layout Standard

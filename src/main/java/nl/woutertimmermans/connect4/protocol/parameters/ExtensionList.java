@@ -29,56 +29,54 @@ import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ExtensionList implements Parameter<Set<String>> {
+public class ExtensionList extends Parameter<Set<String>> {
 
-// ------------------ Instance variables ----------------
-
-    Set<Extension> extensions;
 
 // --------------------- Constructors -------------------
 
-    public ExtensionList(Set<String> exts) {
-        extensions = new HashSet<Extension>();
+    public ExtensionList(Set<String> exts) throws InvalidParameterError {
+        this();
         for (String s : exts) {
-            extensions.add(new Extension(s));
+            getValue().add(new Extension(s).serialize());
         }
     }
 
     public ExtensionList() {
-
+        super();
+        try {
+            setValue(new HashSet<String>());
+        } catch (InvalidParameterError invalidParameterError) {
+            invalidParameterError.printStackTrace();
+        }
     }
 
 // ----------------------- Queries ----------------------
 
     public String serialize() {
         StringBuilder res = new StringBuilder();
-        for (Extension e : extensions) {
-            res.append(e.serialize());
+        for (String s : getValue()) {
+            res.append(s);
         }
         return new String(res);
-    }
-
-
-    public Set<String> getValue() {
-        Set<String> result = new HashSet<String>();
-        for (Extension e : extensions) {
-            result.add(e.serialize());
-        }
-        return result;
     }
 
 // ----------------------- Commands ---------------------
 
     public void read(String argString) throws InvalidParameterError {
 
-        extensions = new HashSet<Extension>();
+        setValue(new HashSet<String>());
 
         for (String s : argString.split(" ")) {
             Extension ex = new Extension();
             ex.read(s);
-            extensions.add(ex);
+            getValue().add(ex.serialize());
         }
 
+    }
+
+    @Override
+    public boolean testValue(Set<String> val) {
+        return true;
     }
 
 }

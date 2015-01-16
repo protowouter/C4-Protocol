@@ -26,32 +26,32 @@ package nl.woutertimmermans.connect4.protocol.parameters;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 
-public class ErrorCode implements Parameter {
+public class ErrorCode extends Parameter<Integer> {
 
-// ------------------ Instance variables ----------------
+    public static final int MIN_ERROR = 0;
+    public static final int MAX_ERROR = 999;
 
-    int errorCode;
 
 // --------------------- Constructors -------------------
 
-    public ErrorCode() {
-
+    public ErrorCode(int eCode) throws InvalidParameterError {
+        super(eCode);
     }
 
-    public ErrorCode(int eCode) {
-        errorCode = eCode;
+    public ErrorCode() {
+        super();
     }
 
 // ----------------------- Queries ----------------------
 
     @Override
-    public Integer getValue() {
-        return errorCode;
+    public boolean testValue(Integer val) {
+        return val >= MIN_ERROR && val <= MAX_ERROR;
     }
 
     @Override
     public String serialize() {
-        return Integer.toString(errorCode);
+        return Integer.toString(getValue());
     }
 
 // ----------------------- Commands ---------------------
@@ -60,7 +60,7 @@ public class ErrorCode implements Parameter {
     public void read(String argString) throws InvalidParameterError {
 
         try {
-            errorCode = Integer.parseInt(argString);
+            setValue(Integer.parseInt(argString));
         } catch (NumberFormatException e) {
             throw new InvalidParameterError(e.getMessage());
         }

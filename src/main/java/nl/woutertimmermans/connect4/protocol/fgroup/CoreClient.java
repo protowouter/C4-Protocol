@@ -46,17 +46,17 @@ public class CoreClient {
      */
 
     public interface Iface {
-        public void accept(int gNumber, Set<String> exts);
+        public void accept(int gNumber, Set<String> exts) throws C4Exception;
 
-        public void startGame(String p1, String p2);
+        public void startGame(String p1, String p2) throws C4Exception;
 
-        public void requestMove(String player);
+        public void requestMove(String player) throws C4Exception;
 
-        public void doneMove(String player, int col);
+        public void doneMove(String player, int col) throws C4Exception;
 
-        public void gameEnd(String player);
+        public void gameEnd(String player) throws C4Exception;
 
-        public void error(int eCode);
+        public void error(int eCode) throws C4Exception;
     }
 
     public static class Client extends C4Client implements Iface {
@@ -65,35 +65,35 @@ public class CoreClient {
             super(out);
         }
 
-        public void accept(int gNumber, Set<String> exts) {
+        public void accept(int gNumber, Set<String> exts) throws C4Exception {
 
             sendAccept(gNumber, exts);
 
         }
 
-        public void startGame(String p1, String p2) {
+        public void startGame(String p1, String p2) throws C4Exception {
             sendStartGame(p1, p2);
         }
 
-        public void requestMove(String player) {
+        public void requestMove(String player) throws C4Exception {
             sendRequestMove(player);
         }
 
-        public void doneMove(String player, int col) {
+        public void doneMove(String player, int col) throws C4Exception {
             sendDoneMove(player, col);
         }
 
-        public void gameEnd(String player) {
+        public void gameEnd(String player) throws C4Exception {
             sendGameEnd(player);
         }
 
-        public void error(int eCode) {
+        public void error(int eCode) throws C4Exception {
 
             sendError(eCode);
 
         }
 
-        private void sendAccept(int gNumber, Set<String> exts) {
+        private void sendAccept(int gNumber, Set<String> exts) throws C4Exception {
 
             AcceptArgs args = new AcceptArgs(gNumber, exts);
 
@@ -117,7 +117,7 @@ public class CoreClient {
 
         }
 
-        private void sendDoneMove(String player, int col) {
+        private void sendDoneMove(String player, int col) throws C4Exception {
             DoneMoveArgs args = new DoneMoveArgs(player, col);
             send(CommandString.DONE_MOVE, args);
         }
@@ -129,7 +129,7 @@ public class CoreClient {
 
         }
 
-        private void sendError(int eCode) {
+        private void sendError(int eCode) throws C4Exception {
 
             ErrorArgs args = new ErrorArgs(eCode);
 
@@ -166,7 +166,7 @@ public class CoreClient {
         }
 
         @Override
-        protected void perform(AcceptArgs args, I iface) {
+        protected void perform(AcceptArgs args, I iface) throws C4Exception {
 
             iface.accept(args.groupNumber.getValue(), args.extensionList.getValue());
 
@@ -181,7 +181,7 @@ public class CoreClient {
         }
 
         @Override
-        protected void perform(StartGameArgs args, I iface) {
+        protected void perform(StartGameArgs args, I iface) throws C4Exception {
             iface.startGame(args.player1.getValue(), args.player2.getValue());
         }
     }
@@ -194,7 +194,7 @@ public class CoreClient {
         }
 
         @Override
-        protected void perform(RequestMoveArgs args, I iface) {
+        protected void perform(RequestMoveArgs args, I iface) throws C4Exception {
             iface.requestMove(args.player.getValue());
         }
 
@@ -208,7 +208,7 @@ public class CoreClient {
         }
 
         @Override
-        protected void perform(DoneMoveArgs args, I iface) {
+        protected void perform(DoneMoveArgs args, I iface) throws C4Exception {
             iface.doneMove(args.player.getValue(), args.column.getValue());
         }
     }
@@ -221,7 +221,7 @@ public class CoreClient {
         }
 
         @Override
-        protected void perform(GameEndArgs args, I iface) {
+        protected void perform(GameEndArgs args, I iface) throws C4Exception {
             iface.gameEnd(args.winner.getValue());
         }
     }
@@ -234,7 +234,7 @@ public class CoreClient {
         }
 
         @Override
-        protected void perform(ErrorArgs args, I iface) {
+        protected void perform(ErrorArgs args, I iface) throws C4Exception {
             iface.error(args.errorCode.getValue());
         }
 
@@ -252,14 +252,20 @@ public class CoreClient {
 
         }
 
-        public AcceptArgs(int gNumber, Set<String> exts) {
+        public AcceptArgs(int gNumber, Set<String> exts) throws InvalidParameterError {
             groupNumber = new GroupNumber(gNumber);
             extensionList = new ExtensionList(exts);
         }
 
         @Override
         public String[] getArgArray() {
-            return new String[]{groupNumber.serialize(), extensionList.serialize()};
+            String[] result;
+            if (extensionList.getValue().size() > 1) {
+                result = new String[]{groupNumber.serialize(), extensionList.serialize()};
+            } else {
+                result = new String[]{groupNumber.serialize()};
+            }
+            return result;
         }
 
         @Override
@@ -306,12 +312,12 @@ public class CoreClient {
 
         @Override
         public void read(String argString) throws C4Exception {
-            String[] args = argString.split(" ", 2);
+            String[] args = argString.split(" ");
             if (args.length < 2) {
                 throw new SyntaxError("Wrong amount of playernames");
             } else {
-                player1.read(args[0].trim());
-                player2.read(args[1].trim());
+                player1.read(args[0]);
+                player2.read(args[1]);
             }
 
 
@@ -359,7 +365,7 @@ public class CoreClient {
             column = new Column();
         }
 
-        public DoneMoveArgs(String p, int c) {
+        public DoneMoveArgs(String p, int c) throws C4Exception {
             try {
                 player = new PlayerName(p);
             } catch (InvalidParameterError e) {
@@ -423,7 +429,7 @@ public class CoreClient {
 
         }
 
-        public ErrorArgs(int eCode) {
+        public ErrorArgs(int eCode) throws InvalidParameterError {
             errorCode = new ErrorCode(eCode);
         }
 

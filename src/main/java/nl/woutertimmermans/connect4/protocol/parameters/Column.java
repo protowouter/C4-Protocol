@@ -26,38 +26,41 @@ package nl.woutertimmermans.connect4.protocol.parameters;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 
-public class Column implements Parameter<Integer> {
+public class Column extends Parameter<Integer> {
 
-// ------------------ Instance variables ----------------
+    public static final int MIN_COL = 0;
+    public static final int MAX_COL = 6;
 
-    private int column;
 
 // --------------------- Constructors -------------------
+
+    public Column(int c) throws InvalidParameterError {
+        setValue(c);
+    }
 
     public Column() {
 
     }
 
-    public Column(int c) {
-        column = c;
-    }
-
 // ----------------------- Queries ----------------------
 
-    public Integer getValue() {
-        return column;
+    @Override
+    public boolean testValue(Integer val) {
+        return val >= MIN_COL && val <= MAX_COL;
     }
 
+    @Override
     public String serialize() {
-        return Integer.toString(column);
+        return Integer.toString(getValue());
     }
 
 // ----------------------- Commands ---------------------
 
+    @Override
     public void read(String argString) throws InvalidParameterError {
 
         try {
-            column = Integer.parseInt(argString);
+            setValue(Integer.parseInt(argString));
         } catch (NumberFormatException e) {
             throw new InvalidParameterError(e.getMessage());
         }
