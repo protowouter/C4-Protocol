@@ -35,13 +35,8 @@ public class PlayerName extends Parameter<String> {
 
 // --------------------- Constructors -------------------
 
-    public PlayerName(String pName) throws InvalidParameterError {
-        super(pName);
-
-    }
 
     public PlayerName() {
-        super();
     }
 
 // ----------------------- Queries ----------------------

@@ -34,18 +34,8 @@ public class ExtensionList extends Parameter<Set<Extension>> {
 
 // --------------------- Constructors -------------------
 
-    public ExtensionList(Set<Extension> exts) throws InvalidParameterError {
-        this();
-        setValue(exts);
-    }
-
     public ExtensionList() {
-        super();
-        try {
-            setValue(new HashSet<Extension>());
-        } catch (InvalidParameterError invalidParameterError) {
-            invalidParameterError.printStackTrace();
-        }
+
     }
 
 // ----------------------- Queries ----------------------

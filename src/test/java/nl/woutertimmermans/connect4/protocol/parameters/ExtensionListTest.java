@@ -41,10 +41,15 @@ public class ExtensionListTest {
     @Before
     public void setUp() throws Exception {
         Set<Extension> exSet = new HashSet<Extension>();
-        exSet.add(new Extension("Challenge"));
-        exSet.add(new Extension("Chat"));
+        Extension ex1 = new Extension();
+        ex1.setValue("Challenge");
+        exSet.add(ex1);
+        Extension ex2 = new Extension();
+        ex2.setValue("Chat");
+        exSet.add(ex2);
 
-        valid = new ExtensionList(exSet);
+        valid = new ExtensionList();
+        valid.setValue(exSet);
         empty = new ExtensionList();
     }
 
@@ -60,9 +65,14 @@ public class ExtensionListTest {
 
         empty.read("Chat Security");
         Set<Extension> test = new HashSet<Extension>();
-        test.add(new Extension("Chat"));
-        test.add(new Extension("Security"));
-        ExtensionList testList = new ExtensionList(test);
+        Extension ex1 = new Extension();
+        Extension ex2 = new Extension();
+        ex2.setValue("Security");
+        ex1.setValue("Chat");
+        test.add(ex1);
+        test.add(ex2);
+        ExtensionList testList = new ExtensionList();
+        testList.setValue(test);
         assertEquals("empty.equals(testList)", empty, testList);
 
     }
@@ -71,8 +81,12 @@ public class ExtensionListTest {
     public void testTestValue() throws Exception {
 
         Set<Extension> test = new HashSet<Extension>();
-        test.add(new Extension("Chat"));
-        test.add(new Extension("Security"));
+        Extension ex1 = new Extension();
+        Extension ex2 = new Extension();
+        ex1.setValue("Chat");
+        ex2.setValue("Security");
+        test.add(ex1);
+        test.add(ex2);
         assertTrue(empty.testValue(test));
         assertTrue(empty.testValue(null));
 

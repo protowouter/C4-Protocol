@@ -40,9 +40,12 @@ public class MessageTest {
     @Before
     public void setUp() throws Exception {
 
-        emptyMessage = new Message("");
-        strangeMessage = new Message("We come in peace &483((21!?>><~><=+-_");
-        trueMessage = new Message("This message is the universal truth");
+        emptyMessage = new Message();
+        emptyMessage.setValue("");
+        strangeMessage = new Message();
+        strangeMessage.setValue("We come in peace &483((21!?>><~><=+-_");
+        trueMessage = new Message();
+        trueMessage.setValue("This message is the universal truth");
         testMessage = new Message();
 
     }

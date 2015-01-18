@@ -39,9 +39,12 @@ public class ExtensionTest {
     @Before
     public void setUp() throws Exception {
 
-        chat = new Extension("Chat");
-        challenge = new Extension("Challenge");
-        challenge2 = new Extension("Challenge");
+        chat = new Extension();
+        chat.setValue("Chat");
+        challenge = new Extension();
+        challenge.setValue("Challenge");
+        challenge2 = new Extension();
+        challenge2.setValue("Challenge");
         emptyExtension = new Extension();
 
     }

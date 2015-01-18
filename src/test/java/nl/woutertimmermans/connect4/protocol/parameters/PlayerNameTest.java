@@ -36,7 +36,8 @@ public class PlayerNameTest {
 
     @Before
     public void setUp() throws Exception {
-        validPlayerName = new PlayerName("Wouter");
+        validPlayerName = new PlayerName();
+        validPlayerName.setValue("Wouter");
         testPlayer = new PlayerName();
     }
 

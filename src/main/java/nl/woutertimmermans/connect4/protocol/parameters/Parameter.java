@@ -41,19 +41,6 @@ public abstract class Parameter<T> {
      */
     private T value;
 
-
-    /**
-     * Creates a Parameter and sets the value.
-     * @param theValue The intended value of this parameter.
-     * @throws InvalidParameterError When the intended value for this parameter is not valid <=>
-     *     !testValue(theValue).
-     */
-    public Parameter(T theValue) throws InvalidParameterError {
-        // TODO: should always use setValue method and remove this constructor
-        setValue(theValue);
-    }
-
-
     /**
      * Creates an empty instance of this Parameter.
      */

@@ -34,10 +34,6 @@ public class Column extends Parameter<Integer> {
 
 // --------------------- Constructors -------------------
 
-    public Column(int c) throws InvalidParameterError {
-        setValue(c);
-    }
-
     public Column() {
 
     }

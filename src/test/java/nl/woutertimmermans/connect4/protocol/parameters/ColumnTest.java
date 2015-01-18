@@ -39,9 +39,12 @@ public class ColumnTest {
     @Before
     public void setUp() throws Exception {
 
-        col0 = new Column(0);
-        col3 = new Column(3);
-        col6 = new Column(6);
+        col0 = new Column();
+        col0.setValue(0);
+        col3 = new Column();
+        col3.setValue(3);
+        col6 = new Column();
+        col6.setValue(6);
         emptyCol = new Column();
 
     }

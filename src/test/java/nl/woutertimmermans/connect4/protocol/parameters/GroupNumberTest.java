@@ -38,8 +38,10 @@ public class GroupNumberTest {
     @Before
     public void setUp() throws Exception {
 
-        group22 = new GroupNumber(22);
-        group0 = new GroupNumber(0);
+        group22 = new GroupNumber();
+        group22.setValue(22);
+        group0 = new GroupNumber();
+        group0.setValue(0);
         testGroup = new GroupNumber();
 
     }

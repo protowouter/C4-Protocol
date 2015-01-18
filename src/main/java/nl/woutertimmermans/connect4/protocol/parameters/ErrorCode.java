@@ -34,10 +34,6 @@ public class ErrorCode extends Parameter<Integer> {
 
 // --------------------- Constructors -------------------
 
-    public ErrorCode(int eCode) throws InvalidParameterError {
-        super(eCode);
-    }
-
     public ErrorCode() {
         super();
     }

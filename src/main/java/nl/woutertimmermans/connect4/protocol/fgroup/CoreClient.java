@@ -253,8 +253,9 @@ public class CoreClient {
         }
 
         public AcceptArgs(int gNumber, Set<Extension> exts) throws InvalidParameterError {
-            groupNumber = new GroupNumber(gNumber);
-            extensionList = new ExtensionList(exts);
+            this();
+            groupNumber.setValue(gNumber);
+            extensionList.setValue(exts);
         }
 
         @Override
@@ -296,10 +297,9 @@ public class CoreClient {
         }
 
         public StartGameArgs(String p1, String p2) throws InvalidParameterError {
-            player1 = new PlayerName(p1);
-            player2 = new PlayerName(p2);
-
-
+            this();
+            player1.setValue(p1);
+            player2.setValue(p2);
         }
 
         @Override
@@ -340,12 +340,9 @@ public class CoreClient {
             player = new PlayerName();
         }
 
-        public RequestMoveArgs(String p) {
-            try {
-                player = new PlayerName(p);
-            } catch (InvalidParameterError e) {
-                e.printStackTrace();
-            }
+        public RequestMoveArgs(String p) throws InvalidParameterError {
+            this();
+            player.setValue(p);
         }
 
         @Override
@@ -379,13 +376,10 @@ public class CoreClient {
             column = new Column();
         }
 
-        public DoneMoveArgs(String p, int c) throws C4Exception {
-            try {
-                player = new PlayerName(p);
-            } catch (InvalidParameterError e) {
-                e.printStackTrace();
-            }
-            column = new Column(c);
+        public DoneMoveArgs(String pName, int col) throws InvalidParameterError {
+            this();
+            player.setValue(pName);
+            column.setValue(col);
         }
 
         public String[] getArgArray() {
@@ -396,7 +390,6 @@ public class CoreClient {
         }
 
         public void read(String argString) throws C4Exception {
-
             String[] args = argString.split(" ");
             if (args.length != 2) {
                 throw new SyntaxError("Wrong amount of parameters given." +
@@ -422,12 +415,9 @@ public class CoreClient {
             winner = new PlayerName();
         }
 
-        public GameEndArgs(String win) {
-            try {
-                winner = new PlayerName(win);
-            } catch (InvalidParameterError e) {
-                e.printStackTrace();
-            }
+        public GameEndArgs(String win) throws InvalidParameterError {
+            this();
+            winner.setValue(win);
         }
 
         public String[] getArgArray() {
@@ -455,8 +445,9 @@ public class CoreClient {
         }
 
         public ErrorArgs(int eCode, String mes) throws InvalidParameterError {
-            errorCode = new ErrorCode(eCode);
-            message = new Message(mes);
+            this();
+            errorCode.setValue(eCode);
+            message.setValue(mes);
         }
 
         @Override

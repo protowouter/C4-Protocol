@@ -32,13 +32,9 @@ public class Message extends Parameter<String> {
 
 // --------------------- Constructors -------------------
 
-    public Message () {
-        super();
+    public Message() {
     }
 
-    public Message(String message) throws InvalidParameterError{
-        super(message);
-    }
 
 // ----------------------- Queries ----------------------
 

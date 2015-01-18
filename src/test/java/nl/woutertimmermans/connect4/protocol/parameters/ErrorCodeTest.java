@@ -38,9 +38,12 @@ public class ErrorCodeTest {
 
     @Before
     public void setUp() throws Exception {
-        zero = new ErrorCode(0);
-        nineNineNine = new ErrorCode(999);
-        random = new ErrorCode(358);
+        zero = new ErrorCode();
+        zero.setValue(0);
+        nineNineNine = new ErrorCode();
+        nineNineNine.setValue(999);
+        random = new ErrorCode();
+        random.setValue(358);
         empty = new ErrorCode();
     }
 

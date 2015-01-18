@@ -33,10 +33,6 @@ public class Extension extends Parameter<String> {
 
 // --------------------- Constructors -------------------
 
-    public Extension(String e) throws InvalidParameterError {
-        super(e);
-    }
-
     public Extension() {
         super();
     }

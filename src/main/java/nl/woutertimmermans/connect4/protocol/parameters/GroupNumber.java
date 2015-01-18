@@ -32,10 +32,6 @@ public class GroupNumber extends Parameter<Integer> {
 
 // --------------------- Constructors -------------------
 
-    public GroupNumber(int gNumber) throws InvalidParameterError {
-        super(gNumber);
-    }
-
     public GroupNumber() {
         super();
     }

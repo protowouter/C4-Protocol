@@ -222,16 +222,18 @@ public class CoreServer {
         private GroupNumber groupNumber;
         private ExtensionList exts;
 
-        public JoinArgs(String pName, int gNumber, Set<Extension> es) throws InvalidParameterError {
-            playerName = new PlayerName(pName);
-            groupNumber = new GroupNumber(gNumber);
-            exts = new ExtensionList(es);
-        }
-
         private JoinArgs() {
-
+            playerName = new PlayerName();
+            groupNumber = new GroupNumber();
+            exts = new ExtensionList();
         }
 
+        public JoinArgs(String pName, int gNumber, Set<Extension> es) throws InvalidParameterError {
+            this();
+            playerName.setValue(pName);
+            groupNumber.setValue(gNumber);
+            exts.setValue(es);
+        }
 
         @Override
         public String[] getArgArray() {
@@ -256,11 +258,8 @@ public class CoreServer {
                 throw new SyntaxError("Wrong amount of parameters need at least 2, you gave "
                         + args.length);
             }
-            playerName = new PlayerName();
             playerName.read(args[0]);
-            groupNumber = new GroupNumber();
             groupNumber.read(args[1]);
-            exts = new ExtensionList();
             if (args.length >= 3) {
                 exts.read(args[2]);
             }
@@ -287,7 +286,6 @@ public class CoreServer {
 
         @Override
         public void read(String argString) throws C4Exception {
-
         }
 
         @Override
@@ -301,13 +299,12 @@ public class CoreServer {
         private Column column;
 
         private DoMoveArgs() {
-
             column = new Column();
-
         }
 
         public DoMoveArgs(int col) throws InvalidParameterError {
-            column = new Column(col);
+            this();
+            column.setValue(col);
         }
 
         @Override
@@ -338,8 +335,9 @@ public class CoreServer {
         }
 
         public ErrorArgs(int eCode, String mes) throws InvalidParameterError {
-            errorCode = new ErrorCode(eCode);
-            message = new Message(mes);
+            this();
+            errorCode.setValue(eCode);
+            message.setValue(mes);
         }
 
         @Override
