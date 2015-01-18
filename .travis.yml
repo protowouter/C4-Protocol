@@ -1,0 +1,10 @@
+language: java
+jdk:
+- oraclejdk8
+
+script: mvn test verify
+
+notifications:
+  email:
+    on_success: change
+    on_failure: change
