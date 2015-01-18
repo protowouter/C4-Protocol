@@ -28,14 +28,6 @@ public interface ParameterRegex {
 
     public static final String PLAYER_NAME = "^([a-zA-Z]|[0-9])+$";
 
-    public static final String GROUP_NUMBER = "^[0-9][0-9]$";
-
     public static final String EXTENSION = "^[a-zA-Z]([a-zA-Z]|_)*$";
-
-    public static final String COLUMN = "^[0-6]$";
-
-    public static final String CHAT_MESSAGE = "([a-zA-Z]|[0-9]| )*";
-
-    public static final String ERROR_CODE = "";
 
 }

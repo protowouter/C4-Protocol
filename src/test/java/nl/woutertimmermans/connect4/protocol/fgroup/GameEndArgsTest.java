@@ -22,49 +22,30 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.parameters;
+package nl.woutertimmermans.connect4.protocol.fgroup;
 
-import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ErrorCode extends Parameter<Integer> {
+public class GameEndArgsTest {
 
-    public static final int MIN_ERROR = 0;
-    public static final int MAX_ERROR = 999;
-
-
-// --------------------- Constructors -------------------
-
-    public ErrorCode(int eCode) throws InvalidParameterError {
-        super(eCode);
-    }
-
-    public ErrorCode() {
-        super();
-    }
-
-// ----------------------- Queries ----------------------
-
-    @Override
-    public boolean testValue(Integer val) {
-        return val == null || val >= MIN_ERROR && val <= MAX_ERROR;
-    }
-
-    @Override
-    public String serialize() {
-        return getValue() == null ? null : Integer.toString(getValue());
-    }
-
-// ----------------------- Commands ---------------------
-
-    @Override
-    public void read(String argString) throws InvalidParameterError {
-
-        try {
-            setValue(Integer.parseInt(argString));
-        } catch (NumberFormatException e) {
-            throw new InvalidParameterError(e.getMessage());
-        }
+    @Before
+    public void setUp() throws Exception {
 
     }
 
+    @Test
+    public void testGetArgArray() throws Exception {
+
+    }
+
+    @Test
+    public void testRead() throws Exception {
+
+    }
+
+    @Test
+    public void testSerialize() throws Exception {
+
+    }
 }

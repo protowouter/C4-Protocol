@@ -55,7 +55,7 @@ public class CoreServer {
 
 
     public interface Iface {
-        public void join(String pName, int gNumber, Set<String> exts) throws C4Exception;
+        public void join(String pName, int gNumber, Set<Extension> exts) throws C4Exception;
 
         public void ready() throws C4Exception;
 
@@ -72,7 +72,7 @@ public class CoreServer {
             super(out);
         }
 
-        public void join(String pName, int gNumber, Set<String> exts) throws C4Exception {
+        public void join(String pName, int gNumber, Set<Extension> exts) throws C4Exception {
             sendJoin(pName, gNumber, exts);
 
         }
@@ -93,7 +93,7 @@ public class CoreServer {
             sendError(eCode, message);
         }
 
-        private void sendJoin(String pName, int gNumber, Set<String> exts) throws C4Exception {
+        private void sendJoin(String pName, int gNumber, Set<Extension> exts) throws C4Exception {
 
             JoinArgs args = new JoinArgs(pName, gNumber, exts);
 
@@ -222,7 +222,7 @@ public class CoreServer {
         GroupNumber groupNumber;
         ExtensionList exts;
 
-        public JoinArgs(String pName, int gNumber, Set<String> es) throws InvalidParameterError {
+        public JoinArgs(String pName, int gNumber, Set<Extension> es) throws InvalidParameterError {
             playerName = new PlayerName(pName);
             groupNumber = new GroupNumber(gNumber);
             exts = new ExtensionList(es);

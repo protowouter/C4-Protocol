@@ -29,22 +29,20 @@ import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ExtensionList extends Parameter<Set<String>> {
+public class ExtensionList extends Parameter<Set<Extension>> {
 
 
 // --------------------- Constructors -------------------
 
-    public ExtensionList(Set<String> exts) throws InvalidParameterError {
+    public ExtensionList(Set<Extension> exts) throws InvalidParameterError {
         this();
-        for (String s : exts) {
-            getValue().add(new Extension(s).serialize());
-        }
+        setValue(exts);
     }
 
     public ExtensionList() {
         super();
         try {
-            setValue(new HashSet<String>());
+            setValue(new HashSet<Extension>());
         } catch (InvalidParameterError invalidParameterError) {
             invalidParameterError.printStackTrace();
         }
@@ -54,29 +52,36 @@ public class ExtensionList extends Parameter<Set<String>> {
 
     public String serialize() {
         StringBuilder res = new StringBuilder();
-        for (String s : getValue()) {
-            res.append(s);
+        for (Extension e : getValue()) {
+            res.append(e.serialize());
+            res.append(" ");
         }
-        return new String(res);
+        return new String(res).trim();
     }
 
 // ----------------------- Commands ---------------------
 
     public void read(String argString) throws InvalidParameterError {
 
-        setValue(new HashSet<String>());
+        setValue(new HashSet<Extension>());
 
         for (String s : argString.split(" ")) {
             Extension ex = new Extension();
             ex.read(s);
-            getValue().add(ex.serialize());
+            getValue().add(ex);
         }
 
     }
 
     @Override
-    public boolean testValue(Set<String> val) {
+    public boolean testValue(Set<Extension> val) {
         return true;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        return o instanceof ExtensionList
+                && getValue().equals(((ExtensionList) o).getValue());
     }
 
 }

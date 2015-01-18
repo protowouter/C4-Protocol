@@ -24,47 +24,46 @@
 
 package nl.woutertimmermans.connect4.protocol.parameters;
 
-import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ErrorCode extends Parameter<Integer> {
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-    public static final int MIN_ERROR = 0;
-    public static final int MAX_ERROR = 999;
+public class MessageTest {
 
+    Message emptyMessage;
+    Message strangeMessage;
+    Message trueMessage;
+    Message testMessage;
 
-// --------------------- Constructors -------------------
+    @Before
+    public void setUp() throws Exception {
 
-    public ErrorCode(int eCode) throws InvalidParameterError {
-        super(eCode);
-    }
-
-    public ErrorCode() {
-        super();
-    }
-
-// ----------------------- Queries ----------------------
-
-    @Override
-    public boolean testValue(Integer val) {
-        return val == null || val >= MIN_ERROR && val <= MAX_ERROR;
-    }
-
-    @Override
-    public String serialize() {
-        return getValue() == null ? null : Integer.toString(getValue());
-    }
-
-// ----------------------- Commands ---------------------
-
-    @Override
-    public void read(String argString) throws InvalidParameterError {
-
-        try {
-            setValue(Integer.parseInt(argString));
-        } catch (NumberFormatException e) {
-            throw new InvalidParameterError(e.getMessage());
-        }
+        emptyMessage = new Message("");
+        strangeMessage = new Message("We come in peace &483((21!?>><~><=+-_");
+        trueMessage = new Message("This message is the universal truth");
+        testMessage = new Message();
 
     }
 
+    @Test
+    public void testTestValue() throws Exception {
+        assertTrue(testMessage.testValue(null));
+        assertTrue(testMessage.testValue("This is a test"));
+    }
+
+    @Test
+    public void testSerialize() throws Exception {
+        assertEquals("strangeMessage.serialize()",
+                "We come in peace &483((21!?>><~><=+-_", strangeMessage.serialize());
+    }
+
+    @Test
+    public void testRead() throws Exception {
+
+        testMessage.read("Breaky breaky");
+        assertEquals("testMessage.getValue()", "Breaky breaky", testMessage.getValue());
+
+    }
 }

@@ -46,7 +46,7 @@ public class CoreClient {
      */
 
     public interface Iface {
-        public void accept(int gNumber, Set<String> exts) throws C4Exception;
+        public void accept(int gNumber, Set<Extension> exts) throws C4Exception;
 
         public void startGame(String p1, String p2) throws C4Exception;
 
@@ -65,7 +65,7 @@ public class CoreClient {
             super(out);
         }
 
-        public void accept(int gNumber, Set<String> exts) throws C4Exception {
+        public void accept(int gNumber, Set<Extension> exts) throws C4Exception {
 
             sendAccept(gNumber, exts);
 
@@ -93,7 +93,7 @@ public class CoreClient {
 
         }
 
-        private void sendAccept(int gNumber, Set<String> exts) throws C4Exception {
+        private void sendAccept(int gNumber, Set<Extension> exts) throws C4Exception {
 
             AcceptArgs args = new AcceptArgs(gNumber, exts);
 
@@ -252,7 +252,7 @@ public class CoreClient {
 
         }
 
-        public AcceptArgs(int gNumber, Set<String> exts) throws InvalidParameterError {
+        public AcceptArgs(int gNumber, Set<Extension> exts) throws InvalidParameterError {
             groupNumber = new GroupNumber(gNumber);
             extensionList = new ExtensionList(exts);
         }
@@ -404,6 +404,7 @@ public class CoreClient {
         }
 
         public GameEndArgs(String win) {
+            //TODO: If null send game_end without winner name
             try {
                 winner = new PlayerName(win);
             } catch (InvalidParameterError e) {

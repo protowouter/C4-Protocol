@@ -27,23 +27,30 @@ package nl.woutertimmermans.connect4.protocol.base;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 
 /**
- * Models an collection of arguments of arbitrary length.
+ * Models a collection of arguments of arbitrary length.
  * This abstract class provides facilities for both generating
  * strings and parsing from strings.
  */
 
 public abstract class C4Args {
 
-// ------------------ Instance variables ----------------
-
-// --------------------- Constructors -------------------
-
 // ----------------------- Queries ----------------------
+
+    /**
+     * Returns an array of serialized arguments.
+     *
+     * @return an array with serialized arguments
+     */
 
     public abstract String[] getArgArray();
 
 
 // ----------------------- Commands ---------------------
+
+    /**
+     * Returns a String with serialized arguments according to the protocol.
+     * @return String representation of this Argument collection.
+     */
 
     public String serialize() {
         String[] args = getArgArray();
@@ -57,6 +64,14 @@ public abstract class C4Args {
         return new String(result);
     }
 
+
+    /**
+     * Reads a String representation of the protocol and initializes the value in this
+     * Argument set.
+     * @param argString String representation to be read into this Argument set.
+     * @throws C4Exception if these string cannot be parsed to a valid argument collection
+     * according to the protocol.
+     */
     public abstract void read(String argString) throws C4Exception;
 
 }

@@ -46,12 +46,12 @@ public class Column extends Parameter<Integer> {
 
     @Override
     public boolean testValue(Integer val) {
-        return val >= MIN_COL && val <= MAX_COL;
+        return val == null || val >= MIN_COL && val <= MAX_COL;
     }
 
     @Override
     public String serialize() {
-        return Integer.toString(getValue());
+        return getValue() == null ? null : Integer.toString(getValue());
     }
 
 // ----------------------- Commands ---------------------

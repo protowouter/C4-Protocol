@@ -35,7 +35,7 @@
 
     <groupId>nl.woutertimmermans.connect4</groupId>
     <artifactId>c4-protocol</artifactId>
-    <version>0.6</version>
+    <version>0.7-SNAPSHOT</version>
 
     <licenses>
         <license>
@@ -133,6 +133,12 @@
     </build>
 
     <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

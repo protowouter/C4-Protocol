@@ -49,7 +49,7 @@ public class GroupNumber extends Parameter<Integer> {
 
     @Override
     public boolean testValue(Integer val) {
-        return true;
+        return val == null || val >= 0;
     }
 
 // ----------------------- Commands ---------------------

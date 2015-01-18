@@ -48,7 +48,7 @@ public class PlayerName extends Parameter<String> {
 
     public boolean testValue(String name) {
 
-        return name.matches(NAME_REGEX);
+        return name == null || name.matches(NAME_REGEX);
     }
 
     public String serialize() {

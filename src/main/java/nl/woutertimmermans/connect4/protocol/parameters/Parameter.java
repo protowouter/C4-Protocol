@@ -26,26 +26,69 @@ package nl.woutertimmermans.connect4.protocol.parameters;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 
+
+/**
+ * This class provides a skeleton implementation of a Parameter. It provides constructors for creating both
+ * an empty and a filled in Parameter and facilities for reading the value from a String and serializing
+ * to a String. On all set operations it is tested whether the intended value for this Parameter is valid.
+ *
+ * @param <T> The type of this parameter.
+ */
 public abstract class Parameter<T> {
 
+    /*@
+     * invariant testValue(value);
+     */
     private T value;
 
+
+    /**
+     * Creates a Parameter and sets the value.
+     * @param theValue The intended value of this parameter.
+     * @throws InvalidParameterError When the intended value for this parameter is not valid <=>
+     *     !testValue(theValue).
+     */
     public Parameter(T theValue) throws InvalidParameterError {
         setValue(theValue);
     }
 
+
+    /**
+     * Creates an empty instance of this Parameter.
+     */
     public Parameter() {
 
     }
 
+    /**
+     * Return a String serialization of this Parameter.
+     * @return the String serialization of this Parameter.
+     */
     public abstract String serialize();
 
+    /**
+     * Reads a String representation of this Parameter and tries to parse this.
+     * @param argString String representation for this Parameter.
+     * @throws InvalidParameterError When the intended value for this parameter is not valid <=>
+     *     !testValue(theValue).
+     */
     public abstract void read(String argString) throws InvalidParameterError;
 
+
+    /**
+     * Returns the value of this Parameter.
+     * @return the value of this Parameter.
+     */
     public T getValue() {
         return value;
     }
 
+
+    /**
+     * Sets the value of this Parameter. Checks whether this value is correct.
+     * @param newVal
+     * @throws InvalidParameterError
+     */
     public void setValue(T newVal) throws InvalidParameterError {
         if (testValue(newVal)) {
             value = newVal;

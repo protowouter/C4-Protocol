@@ -24,47 +24,46 @@
 
 package nl.woutertimmermans.connect4.protocol.parameters;
 
-import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ErrorCode extends Parameter<Integer> {
+import static org.junit.Assert.*;
 
-    public static final int MIN_ERROR = 0;
-    public static final int MAX_ERROR = 999;
+public class PlayerNameTest {
 
+    private PlayerName validPlayerName;
+    private PlayerName testPlayer;
 
-// --------------------- Constructors -------------------
-
-    public ErrorCode(int eCode) throws InvalidParameterError {
-        super(eCode);
+    @Before
+    public void setUp() throws Exception {
+        validPlayerName = new PlayerName("Wouter");
+        testPlayer = new PlayerName();
     }
 
-    public ErrorCode() {
-        super();
-    }
+    @Test
+    public void testTestValue() throws Exception {
 
-// ----------------------- Queries ----------------------
-
-    @Override
-    public boolean testValue(Integer val) {
-        return val == null || val >= MIN_ERROR && val <= MAX_ERROR;
-    }
-
-    @Override
-    public String serialize() {
-        return getValue() == null ? null : Integer.toString(getValue());
-    }
-
-// ----------------------- Commands ---------------------
-
-    @Override
-    public void read(String argString) throws InvalidParameterError {
-
-        try {
-            setValue(Integer.parseInt(argString));
-        } catch (NumberFormatException e) {
-            throw new InvalidParameterError(e.getMessage());
-        }
+        assertTrue(testPlayer.testValue(null));
+        assertTrue(testPlayer.testValue("W"));
+        assertTrue(testPlayer.testValue("w"));
+        assertFalse(testPlayer.testValue(""));
+        assertFalse(testPlayer.testValue("Foute Naam"));
+        assertFalse(testPlayer.testValue("Ra&reTekens"));
 
     }
 
+    @Test
+    public void testSerialize() throws Exception {
+
+        assertEquals("validPlayerName.serialize()", "Wouter", validPlayerName.serialize());
+
+    }
+
+    @Test
+    public void testRead() throws Exception {
+
+        testPlayer.read("Frits");
+        assertEquals("testPlayer.getValue()", "Frits", testPlayer.getValue());
+
+    }
 }

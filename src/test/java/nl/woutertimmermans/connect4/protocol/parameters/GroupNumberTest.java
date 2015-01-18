@@ -24,47 +24,48 @@
 
 package nl.woutertimmermans.connect4.protocol.parameters;
 
-import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
+import org.junit.Before;
+import org.junit.Test;
 
-public class ErrorCode extends Parameter<Integer> {
+import static org.junit.Assert.*;
 
-    public static final int MIN_ERROR = 0;
-    public static final int MAX_ERROR = 999;
+public class GroupNumberTest {
 
+    private GroupNumber group22;
+    private GroupNumber group0;
+    private GroupNumber testGroup;
 
-// --------------------- Constructors -------------------
+    @Before
+    public void setUp() throws Exception {
 
-    public ErrorCode(int eCode) throws InvalidParameterError {
-        super(eCode);
-    }
-
-    public ErrorCode() {
-        super();
-    }
-
-// ----------------------- Queries ----------------------
-
-    @Override
-    public boolean testValue(Integer val) {
-        return val == null || val >= MIN_ERROR && val <= MAX_ERROR;
-    }
-
-    @Override
-    public String serialize() {
-        return getValue() == null ? null : Integer.toString(getValue());
-    }
-
-// ----------------------- Commands ---------------------
-
-    @Override
-    public void read(String argString) throws InvalidParameterError {
-
-        try {
-            setValue(Integer.parseInt(argString));
-        } catch (NumberFormatException e) {
-            throw new InvalidParameterError(e.getMessage());
-        }
+        group22 = new GroupNumber(22);
+        group0 = new GroupNumber(0);
+        testGroup = new GroupNumber();
 
     }
 
+    @Test
+    public void testSerialize() throws Exception {
+
+        assertEquals("group22.serialize()", "22", group22.serialize());
+        assertEquals("group0.serialize()", "0", group0.serialize());
+
+    }
+
+    @Test
+    public void testTestValue() throws Exception {
+
+        assertFalse(testGroup.testValue(-1));
+        assertTrue(testGroup.testValue(null));
+
+    }
+
+    @Test
+    public void testRead() throws Exception {
+
+        testGroup.read("23");
+        int groupValue = testGroup.getValue();
+        assertEquals("testGroup.getValue()", 23, groupValue);
+
+    }
 }

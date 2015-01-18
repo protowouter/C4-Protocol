@@ -48,13 +48,21 @@ public class Extension extends Parameter<String> {
         return getValue();
     }
 
+    @Override
     public boolean equals(Object o) {
-        return o instanceof Extension && getValue().equals(o);
+        return o instanceof Extension &&
+                ((getValue() == null && ((Extension) o).getValue() == null)
+                        || getValue() != null && getValue().equals(((Extension) o).getValue()));
+    }
+
+    @Override
+    public int hashCode() {
+        return getValue().hashCode();
     }
 
     @Override
     public boolean testValue(String val) {
-        return val.matches(EXTENSION_REGEX);
+        return val == null || val.matches(EXTENSION_REGEX);
     }
 
 // ----------------------- Commands ---------------------
