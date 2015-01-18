@@ -1843,7 +1843,10 @@ reference "sec:Client-states"
 .
  The server may decide to which clients - in the Accepted state - it sends
  the command at its own discretion.
- 
+ To distinguish between local and global chat messages it is RECOMMENDED
+ to prepend the message to propend the message with an identifier.
+ e.g.
+ [local] for local or [global] for global messages.
 \end_layout
 
 \begin_layout Labeling
@@ -2114,7 +2117,7 @@ Revisions
 \end_layout
 
 \begin_layout Enumerate
-16-01-2015 v1.0: Core functionality should be pretty stable
+18-01-2015 v1.0: Core functionality should be pretty stable
 \end_layout
 
 \begin_deeper
