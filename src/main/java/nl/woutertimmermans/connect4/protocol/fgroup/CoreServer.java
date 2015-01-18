@@ -218,9 +218,9 @@ public class CoreServer {
 
     public static class JoinArgs extends C4Args {
 
-        PlayerName playerName;
-        GroupNumber groupNumber;
-        ExtensionList exts;
+        private PlayerName playerName;
+        private GroupNumber groupNumber;
+        private ExtensionList exts;
 
         public JoinArgs(String pName, int gNumber, Set<Extension> es) throws InvalidParameterError {
             playerName = new PlayerName(pName);
@@ -264,7 +264,13 @@ public class CoreServer {
             if (args.length >= 3) {
                 exts.read(args[2]);
             }
+        }
 
+        @Override
+        public void validate() throws SyntaxError {
+            if (playerName.getValue() == null || groupNumber.getValue() == null) {
+                throw new SyntaxError("Player name and group number have to be provided");
+            }
         }
     }
 
@@ -283,13 +289,18 @@ public class CoreServer {
         public void read(String argString) throws C4Exception {
 
         }
+
+        @Override
+        public void validate() throws SyntaxError {
+
+        }
     }
 
     public static class DoMoveArgs extends C4Args {
 
-        Column column;
+        private Column column;
 
-        public DoMoveArgs() {
+        private DoMoveArgs() {
 
             column = new Column();
 
@@ -308,13 +319,20 @@ public class CoreServer {
         public void read(String argString) throws C4Exception {
             column.read(argString);
         }
+
+        @Override
+        public void validate() throws SyntaxError {
+            if (column.getValue() == null) {
+                throw new SyntaxError("Column has to provided");
+            }
+        }
     }
 
     public static class ErrorArgs extends C4Args {
-        ErrorCode errorCode;
-        Message message;
+        private ErrorCode errorCode;
+        private Message message;
 
-        public ErrorArgs() {
+        private ErrorArgs() {
             errorCode = new ErrorCode();
             message = new Message();
         }
@@ -338,6 +356,13 @@ public class CoreServer {
                 errorCode.read(args[1]);
             }
 
+        }
+
+        @Override
+        public void validate() throws SyntaxError {
+            if (errorCode.getValue() == null) {
+                throw new SyntaxError("Error code has to be provided");
+            }
         }
     }
 

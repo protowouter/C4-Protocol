@@ -22,41 +22,39 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.base;
+package nl.woutertimmermans.connect4.protocol.fgroup;
 
-import nl.woutertimmermans.connect4.protocol.exceptions.SyntaxError;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.util.logging.Logger;
+import static org.junit.Assert.assertEquals;
 
-public class C4Client {
+public class ErrorArgsTest {
 
-// ------------------ Instance variables ----------------
+    private CoreClient.ErrorArgs withMessage;
+    private CoreClient.ErrorArgs emptyMessage;
+    private CoreClient.ErrorArgs withoutMessage;
 
-    private BufferedWriter out;
+    @Before
+    public void setUp() throws Exception {
 
-// --------------------- Constructors -------------------
-
-    public C4Client(BufferedWriter o) {
-
-        out = o;
-
-    }
-
-// ----------------------- Queries ----------------------
-
-// ----------------------- Commands ---------------------
-
-    public synchronized void send(String command, C4Args args) throws SyntaxError {
-        try {
-            out.write(command + " " + args.serialize());
-            out.newLine();
-            out.flush();
-        } catch (IOException e) {
-            Logger.getGlobal().throwing("C4Client", "send", e);
-        }
+        withMessage = new CoreClient.ErrorArgs(203, "Error message");
+        emptyMessage = new CoreClient.ErrorArgs(204, "");
+        withoutMessage = new CoreClient.ErrorArgs(205, null);
 
     }
 
+    @Test
+    public void testRead() throws Exception {
+
+    }
+
+    @Test
+    public void testSerialize() throws Exception {
+
+        assertEquals("withMessage.serialize", "203 Error message", withMessage.serialize());
+        assertEquals("emptyMessage.serialize", "204 ", emptyMessage.serialize());
+        assertEquals("withoutMessage.serialize", "205 ", withoutMessage.serialize());
+
+    }
 }

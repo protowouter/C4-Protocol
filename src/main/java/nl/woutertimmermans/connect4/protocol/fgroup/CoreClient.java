@@ -101,7 +101,7 @@ public class CoreClient {
 
         }
 
-        private void sendStartGame(String p1, String p2) {
+        private void sendStartGame(String p1, String p2) throws C4Exception {
 
             StartGameArgs args = new StartGameArgs(p1, p2);
 
@@ -109,7 +109,7 @@ public class CoreClient {
 
         }
 
-        private void sendRequestMove(String player) {
+        private void sendRequestMove(String player) throws C4Exception {
 
             RequestMoveArgs args = new RequestMoveArgs(player);
 
@@ -122,7 +122,7 @@ public class CoreClient {
             send(CommandString.DONE_MOVE, args);
         }
 
-        private void sendGameEnd(String player) {
+        private void sendGameEnd(String player) throws C4Exception {
 
             GameEndArgs args = new GameEndArgs(player);
             send(CommandString.GAME_END, args);
@@ -242,8 +242,8 @@ public class CoreClient {
 
     public static class AcceptArgs extends C4Args {
 
-        GroupNumber groupNumber;
-        ExtensionList extensionList;
+        private GroupNumber groupNumber;
+        private ExtensionList extensionList;
 
         public AcceptArgs() {
 
@@ -270,35 +270,35 @@ public class CoreClient {
 
         @Override
         public void read(String argString) throws C4Exception {
-
             String[] args = argString.split(" ", 2);
             groupNumber.read(args[0]);
             if (args.length > 1) {
                 extensionList.read(args[1]);
             }
+        }
 
-
-
+        @Override
+        public void validate() throws SyntaxError {
+            if (groupNumber.getValue() == null) {
+                throw new SyntaxError("Groupnumber not provided");
+            }
         }
     }
 
     public static class StartGameArgs extends C4Args {
 
-        PlayerName player1;
-        PlayerName player2;
+        private PlayerName player1;
+        private PlayerName player2;
 
         public StartGameArgs() {
             player1 = new PlayerName();
             player2 = new PlayerName();
         }
 
-        public StartGameArgs(String p1, String p2) {
-            try {
-                player1 = new PlayerName(p1);
-                player2 = new PlayerName(p2);
-            } catch (InvalidParameterError e) {
-                e.printStackTrace();
-            }
+        public StartGameArgs(String p1, String p2) throws InvalidParameterError {
+            player1 = new PlayerName(p1);
+            player2 = new PlayerName(p2);
+
 
         }
 
@@ -313,7 +313,7 @@ public class CoreClient {
         @Override
         public void read(String argString) throws C4Exception {
             String[] args = argString.split(" ");
-            if (args.length < 2) {
+            if (args.length != 2) {
                 throw new SyntaxError("Wrong amount of playernames");
             } else {
                 player1.read(args[0]);
@@ -323,11 +323,18 @@ public class CoreClient {
 
         }
 
+        @Override
+        public void validate() throws SyntaxError {
+            if (player1.getValue() == null || player2.getValue() == null) {
+                throw new SyntaxError("Less than two player names provided");
+            }
+        }
+
     }
 
     public static class RequestMoveArgs extends C4Args {
 
-        PlayerName player;
+        private PlayerName player;
 
         public RequestMoveArgs() {
             player = new PlayerName();
@@ -353,12 +360,19 @@ public class CoreClient {
             player.read(argString);
         }
 
+        @Override
+        public void validate() throws SyntaxError {
+            if (player.getValue() == null) {
+                throw new SyntaxError("Playername has to provided");
+            }
+        }
+
     }
 
     public static class DoneMoveArgs extends C4Args {
 
-        PlayerName player;
-        Column column;
+        private PlayerName player;
+        private Column column;
 
         public DoneMoveArgs() {
             player = new PlayerName();
@@ -384,27 +398,31 @@ public class CoreClient {
         public void read(String argString) throws C4Exception {
 
             String[] args = argString.split(" ");
-            if (args.length < 2) {
-                throw new SyntaxError("Too few parameters given");
+            if (args.length != 2) {
+                throw new SyntaxError("Wrong amount of parameters given." +
+                        " Required: 2 Received: " + args.length);
             } else {
                 player.read(args[0]);
                 column.read(args[1]);
             }
+        }
 
-
+        public void validate() throws SyntaxError {
+            if (player.getValue() == null || column.getValue() == null) {
+                throw new SyntaxError("Both player name and column have to be provided");
+            }
         }
     }
 
     public static class GameEndArgs extends C4Args {
 
-        PlayerName winner;
+        private PlayerName winner;
 
         public GameEndArgs() {
             winner = new PlayerName();
         }
 
         public GameEndArgs(String win) {
-            //TODO: If null send game_end without winner name
             try {
                 winner = new PlayerName(win);
             } catch (InvalidParameterError e) {
@@ -421,11 +439,15 @@ public class CoreClient {
         public void read(String argString) throws C4Exception {
             winner.read(argString);
         }
+
+        public void validate() throws SyntaxError {
+
+        }
     }
 
     public static class ErrorArgs extends C4Args {
-        ErrorCode errorCode;
-        Message message;
+        private ErrorCode errorCode;
+        private Message message;
 
         public ErrorArgs() {
             errorCode = new ErrorCode();
@@ -450,7 +472,13 @@ public class CoreClient {
             if (args.length > 1) {
                 errorCode.read(args[1]);
             }
+        }
 
+        @Override
+        public void validate() throws SyntaxError {
+            if (errorCode.getValue() == null) {
+                throw new SyntaxError("Errorcode has to be provided");
+            }
         }
     }
 

@@ -49,6 +49,7 @@ public abstract class Parameter<T> {
      *     !testValue(theValue).
      */
     public Parameter(T theValue) throws InvalidParameterError {
+        // TODO: should always use setValue method and remove this constructor
         setValue(theValue);
     }
 
@@ -93,7 +94,7 @@ public abstract class Parameter<T> {
         if (testValue(newVal)) {
             value = newVal;
         } else {
-            throw new InvalidParameterError("Argument " + newVal + "is not valid");
+            throw new InvalidParameterError("Argument " + newVal + " is not valid");
         }
     }
 

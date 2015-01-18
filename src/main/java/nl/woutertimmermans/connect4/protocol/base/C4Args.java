@@ -25,6 +25,7 @@
 package nl.woutertimmermans.connect4.protocol.base;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
+import nl.woutertimmermans.connect4.protocol.exceptions.SyntaxError;
 
 /**
  * Models a collection of arguments of arbitrary length.
@@ -50,15 +51,20 @@ public abstract class C4Args {
     /**
      * Returns a String with serialized arguments according to the protocol.
      * @return String representation of this Argument collection.
+     * @throws nl.woutertimmermans.connect4.protocol.exceptions.SyntaxError when the argument collection
+     * doesn't comply with the protocol specification.
      */
 
-    public String serialize() {
+    public String serialize() throws SyntaxError {
+        validate();
         String[] args = getArgArray();
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < args.length; i++) {
-            result.append(args[i]);
-            if (i < args.length - 1) {
-                result.append(" ");
+            if (args[i] != null) {
+                result.append(args[i]);
+                if (i < args.length - 1) {
+                    result.append(" ");
+                }
             }
         }
         return new String(result);
@@ -73,5 +79,7 @@ public abstract class C4Args {
      * according to the protocol.
      */
     public abstract void read(String argString) throws C4Exception;
+
+    public abstract void validate() throws SyntaxError;
 
 }

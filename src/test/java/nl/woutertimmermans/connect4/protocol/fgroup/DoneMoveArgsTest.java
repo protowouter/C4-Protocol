@@ -22,41 +22,53 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.base;
+package nl.woutertimmermans.connect4.protocol.fgroup;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.SyntaxError;
+import org.junit.Before;
+import org.junit.Test;
 
-import java.io.BufferedWriter;
-import java.io.IOException;
-import java.util.logging.Logger;
+import static org.junit.Assert.assertEquals;
 
-public class C4Client {
+public class DoneMoveArgsTest {
 
-// ------------------ Instance variables ----------------
+    private CoreClient.DoneMoveArgs validArgs;
+    private CoreClient.DoneMoveArgs emptyArgs;
 
-    private BufferedWriter out;
+    @Before
+    public void setUp() throws Exception {
 
-// --------------------- Constructors -------------------
-
-    public C4Client(BufferedWriter o) {
-
-        out = o;
-
-    }
-
-// ----------------------- Queries ----------------------
-
-// ----------------------- Commands ---------------------
-
-    public synchronized void send(String command, C4Args args) throws SyntaxError {
-        try {
-            out.write(command + " " + args.serialize());
-            out.newLine();
-            out.flush();
-        } catch (IOException e) {
-            Logger.getGlobal().throwing("C4Client", "send", e);
-        }
+        validArgs = new CoreClient.DoneMoveArgs("Wouter", 2);
+        emptyArgs = new CoreClient.DoneMoveArgs();
 
     }
 
+    @Test(expected = SyntaxError.class)
+    public void testConstructor() throws Exception {
+        new CoreClient.DoneMoveArgs(null, 4).serialize();
+    }
+
+    @Test
+    public void testReadValidArguments() throws Exception {
+
+        emptyArgs.read("Frits 3");
+
+    }
+
+    @Test(expected = SyntaxError.class)
+    public void testReadNoPlayerName() throws Exception {
+        emptyArgs.read("3");
+    }
+
+    @Test(expected = SyntaxError.class)
+    public void testReadNoColumn() throws Exception {
+        emptyArgs.read("Woutertje");
+    }
+
+    @Test
+    public void testSerialize() throws Exception {
+
+        assertEquals("validArgs.serialize()", "Wouter 2", validArgs.serialize());
+
+    }
 }
