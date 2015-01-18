@@ -57,8 +57,8 @@ public abstract class Parameter<T> {
     /**
      * Reads a String representation of this Parameter and tries to parse this.
      * @param argString String representation for this Parameter.
-     * @throws InvalidParameterError When the intended value for this parameter is not valid <=>
-     *     !testValue(theValue).
+     * @throws InvalidParameterError When the intended value for this parameter is not valid.
+     *
      */
     public abstract void read(String argString) throws InvalidParameterError;
 
@@ -74,8 +74,8 @@ public abstract class Parameter<T> {
 
     /**
      * Sets the value of this Parameter. Checks whether this value is correct.
-     * @param newVal
-     * @throws InvalidParameterError
+     * @param newVal The intended value for this Parameter.
+     * @throws InvalidParameterError if the value for this parameter is invalid.
      */
     public void setValue(T newVal) throws InvalidParameterError {
         if (testValue(newVal)) {

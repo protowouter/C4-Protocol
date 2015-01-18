@@ -32,7 +32,7 @@ import java.util.Map;
  * An processor is an object that translates an string received
  * from the network to method calls on local objects.
  *
- * @param <I>
+ * @param <I> The interface which objects passed to this processor have to implement.
  */
 
 public abstract class C4Processor<I> {
