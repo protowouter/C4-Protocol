@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/protowouter/C4-Protocol.svg)](https://travis-ci.org/protowouter/C4-Protocol)
 # C4-Protocol
 C4-Protocol is the protocol for the Connect4 game of the IN3 group. In this repository you will find the protocol description document
 and also Java files with constants and a reference implementation of the protocol.
