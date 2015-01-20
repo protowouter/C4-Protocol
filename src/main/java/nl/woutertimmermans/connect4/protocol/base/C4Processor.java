@@ -58,7 +58,7 @@ public abstract class C4Processor<I> {
     public boolean process(String commandstring) throws C4Exception {
         String[] csArray = commandstring.split(" ", 2);
         String command = csArray[0];
-        String args = csArray.length > 1 ? csArray[1] : "";
+        String args = csArray.length > 1 ? csArray[1] : null;
         C4ProcessFunction<I, ? extends C4Args> fn = functionMap.get(command);
 
         if (fn == null) {

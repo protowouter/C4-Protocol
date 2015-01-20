@@ -351,7 +351,7 @@ public class CoreServer {
             String[] args = argString.split(" ", 2);
             errorCode.read(args[0]);
             if (args.length > 1) {
-                errorCode.read(args[1]);
+                message.read(args[1]);
             }
 
         }
