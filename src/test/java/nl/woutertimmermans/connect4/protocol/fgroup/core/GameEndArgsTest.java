@@ -22,45 +22,46 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.parameters;
+package nl.woutertimmermans.connect4.protocol.fgroup.core;
 
-import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
+import nl.woutertimmermans.connect4.protocol.base.C4Args;
+import org.junit.Before;
+import org.junit.Test;
 
-public class Column extends Parameter<Integer> {
+import static org.junit.Assert.assertEquals;
 
-    public static final int MIN_COL = 0;
-    public static final int MAX_COL = 6;
+public class GameEndArgsTest {
 
+    C4Args tie;
+    C4Args winner;
+    C4Args empty;
 
-// --------------------- Constructors -------------------
+    @Before
+    public void setUp() throws Exception {
 
-    public Column() {
-
-    }
-
-// ----------------------- Queries ----------------------
-
-    @Override
-    public boolean testValue(Integer val) {
-        return val == null || val >= MIN_COL && val <= MAX_COL;
-    }
-
-    @Override
-    public String serialize() {
-        return getValue() == null ? null : Integer.toString(getValue());
-    }
-
-// ----------------------- Commands ---------------------
-
-    @Override
-    public void read(String argString) throws InvalidParameterError {
-
-        try {
-            setValue(Integer.parseInt(argString));
-        } catch (NumberFormatException e) {
-            throw new InvalidParameterError("Unable to parse: " + e.getMessage());
-        }
+        tie = new CoreClient.GameEndArgs(null);
+        winner = new CoreClient.GameEndArgs("Wouter");
+        empty = new CoreClient.GameEndArgs();
 
     }
 
+    @Test
+    public void testReadNull() throws Exception {
+
+        empty.read(null);
+        assertEquals("empty.serialize()", "", empty.serialize());
+
+    }
+
+    @Test
+    public void testReadNotNull() throws Exception {
+        empty.read("FritsWester");
+        assertEquals("emtpy.serialize()", "FritsWester", empty.serialize());
+    }
+
+    @Test
+    public void testSerialize() throws Exception {
+        assertEquals("winner.serialize()", "Wouter", winner.serialize());
+        assertEquals("tie.serialize()", "", tie.serialize());
+    }
 }

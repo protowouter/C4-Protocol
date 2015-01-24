@@ -75,6 +75,34 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <configuration>
+                    <doclet>org.stfm.texdoclet.TeXDoclet</doclet>
+                    <docletArtifact>
+                        <groupId>org.stfm</groupId>
+                        <artifactId>texdoclet</artifactId>
+                        <version>0.9-SNAPSHOT</version>
+                    </docletArtifact>
+                    <sourcepath>src/main/java</sourcepath>
+                    <useStandardDocletOptions>false</useStandardDocletOptions>
+                    <!-- important ! -->
+                    <destDir>apidocs_tex</destDir>
+                    <additionalparam>
+                        -tree
+                        -hyperref
+                        -output TeXDoclet.tex
+                        -createpdf
+                        -title "C4 Protocol Java Documentation"
+                        -subtitle "Created with Javadoc TeXDoclet Doclet"
+                        -author "Luce Sandfort and Wouter Timmermans"
+                        -subpackages org
+                        -shortinherited
+                    </additionalparam>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <version>3.2</version>
                 <configuration>

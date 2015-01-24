@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.fgroup;
+package nl.woutertimmermans.connect4.protocol.fgroup.core;
 
 import nl.woutertimmermans.connect4.protocol.base.C4Args;
 import nl.woutertimmermans.connect4.protocol.base.C4Client;
@@ -44,15 +44,6 @@ public class CoreServer {
     /**
      * These are the commands that the client can send to the server.
      */
-
-// ------------------ Instance variables ----------------
-
-// --------------------- Constructors -------------------
-
-// ----------------------- Queries ----------------------
-
-// ----------------------- Commands ---------------------
-
 
     public interface Iface {
         public void join(String pName, int gNumber, Set<Extension> exts) throws C4Exception;
@@ -222,7 +213,7 @@ public class CoreServer {
         private GroupNumber groupNumber;
         private ExtensionList exts;
 
-        private JoinArgs() {
+        public JoinArgs() {
             playerName = new PlayerName();
             groupNumber = new GroupNumber();
             exts = new ExtensionList();
@@ -253,6 +244,9 @@ public class CoreServer {
 
         @Override
         public void read(String argString) throws C4Exception {
+            if (argString == null) {
+                throw new SyntaxError("Wrong amount of parameters, I need at least 2, you gave none");
+            }
             String[] args = argString.split(" ", 3);
             if (args.length < 2) {
                 throw new SyntaxError("Wrong amount of parameters need at least 2, you gave "
@@ -298,7 +292,7 @@ public class CoreServer {
 
         private Column column;
 
-        private DoMoveArgs() {
+        public DoMoveArgs() {
             column = new Column();
         }
 
@@ -329,7 +323,7 @@ public class CoreServer {
         private ErrorCode errorCode;
         private Message message;
 
-        private ErrorArgs() {
+        public ErrorArgs() {
             errorCode = new ErrorCode();
             message = new Message();
         }
@@ -348,6 +342,9 @@ public class CoreServer {
 
         @Override
         public void read(String argString) throws C4Exception {
+            if (argString == null) {
+                throw new SyntaxError("Wrong amount of parameters, I need at least 1, you gave none");
+            }
             String[] args = argString.split(" ", 2);
             errorCode.read(args[0]);
             if (args.length > 1) {

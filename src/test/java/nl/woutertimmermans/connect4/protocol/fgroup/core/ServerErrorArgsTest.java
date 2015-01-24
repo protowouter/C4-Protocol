@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.fgroup;
+package nl.woutertimmermans.connect4.protocol.fgroup.core;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.SyntaxError;
 import org.junit.Before;
@@ -30,45 +30,34 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class DoneMoveArgsTest {
+public class ServerErrorArgsTest {
 
-    private CoreClient.DoneMoveArgs validArgs;
-    private CoreClient.DoneMoveArgs emptyArgs;
+    private CoreServer.ErrorArgs withMessage;
+    private CoreServer.ErrorArgs emptyMessage;
+    private CoreServer.ErrorArgs withoutMessage;
+    private CoreServer.ErrorArgs empty;
 
     @Before
     public void setUp() throws Exception {
 
-        validArgs = new CoreClient.DoneMoveArgs("Wouter", 2);
-        emptyArgs = new CoreClient.DoneMoveArgs();
+        withMessage = new CoreServer.ErrorArgs(203, "Error message");
+        emptyMessage = new CoreServer.ErrorArgs(204, "");
+        withoutMessage = new CoreServer.ErrorArgs(205, null);
+        empty = new CoreServer.ErrorArgs();
 
     }
 
     @Test(expected = SyntaxError.class)
-    public void testConstructor() throws Exception {
-        new CoreClient.DoneMoveArgs(null, 4).serialize();
-    }
-
-    @Test
-    public void testReadValidArguments() throws Exception {
-
-        emptyArgs.read("Frits 3");
-
-    }
-
-    @Test(expected = SyntaxError.class)
-    public void testReadNoPlayerName() throws Exception {
-        emptyArgs.read("3");
-    }
-
-    @Test(expected = SyntaxError.class)
-    public void testReadNoColumn() throws Exception {
-        emptyArgs.read("Woutertje");
+    public void testRead() throws Exception {
+        empty.read(null);
     }
 
     @Test
     public void testSerialize() throws Exception {
 
-        assertEquals("validArgs.serialize()", "Wouter 2", validArgs.serialize());
+        assertEquals("withMessage.serialize", "203 Error message", withMessage.serialize());
+        assertEquals("emptyMessage.serialize", "204 ", emptyMessage.serialize());
+        assertEquals("withoutMessage.serialize", "205 ", withoutMessage.serialize());
 
     }
 }

@@ -22,18 +22,20 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.fgroup;
+package nl.woutertimmermans.connect4.protocol.fgroup.core;
 
+import nl.woutertimmermans.connect4.protocol.exceptions.SyntaxError;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-public class ErrorArgsTest {
+public class ClientErrorArgsTest {
 
     private CoreClient.ErrorArgs withMessage;
     private CoreClient.ErrorArgs emptyMessage;
     private CoreClient.ErrorArgs withoutMessage;
+    private CoreClient.ErrorArgs empty;
 
     @Before
     public void setUp() throws Exception {
@@ -41,12 +43,13 @@ public class ErrorArgsTest {
         withMessage = new CoreClient.ErrorArgs(203, "Error message");
         emptyMessage = new CoreClient.ErrorArgs(204, "");
         withoutMessage = new CoreClient.ErrorArgs(205, null);
+        empty = new CoreClient.ErrorArgs();
 
     }
 
-    @Test
+    @Test(expected = SyntaxError.class)
     public void testRead() throws Exception {
-
+        empty.read(null);
     }
 
     @Test

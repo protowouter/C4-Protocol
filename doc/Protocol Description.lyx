@@ -1694,6 +1694,8 @@ reference "sec:Client-states"
 .
  The server MUST include the player-name from which the state has changed.
  The server MUST include the current state of the client.
+ When a client that supports the lobby extension connects to the server
+ the server MUST send the current state of all players to the client.
 \end_layout
 
 \begin_layout Labeling

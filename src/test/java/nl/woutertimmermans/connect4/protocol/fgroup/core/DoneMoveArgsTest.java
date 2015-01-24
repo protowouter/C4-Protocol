@@ -22,45 +22,53 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.parameters;
+package nl.woutertimmermans.connect4.protocol.fgroup.core;
 
-import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
+import nl.woutertimmermans.connect4.protocol.exceptions.SyntaxError;
+import org.junit.Before;
+import org.junit.Test;
 
-public class Column extends Parameter<Integer> {
+import static org.junit.Assert.assertEquals;
 
-    public static final int MIN_COL = 0;
-    public static final int MAX_COL = 6;
+public class DoneMoveArgsTest {
 
+    private CoreClient.DoneMoveArgs validArgs;
+    private CoreClient.DoneMoveArgs emptyArgs;
 
-// --------------------- Constructors -------------------
+    @Before
+    public void setUp() throws Exception {
 
-    public Column() {
-
-    }
-
-// ----------------------- Queries ----------------------
-
-    @Override
-    public boolean testValue(Integer val) {
-        return val == null || val >= MIN_COL && val <= MAX_COL;
-    }
-
-    @Override
-    public String serialize() {
-        return getValue() == null ? null : Integer.toString(getValue());
-    }
-
-// ----------------------- Commands ---------------------
-
-    @Override
-    public void read(String argString) throws InvalidParameterError {
-
-        try {
-            setValue(Integer.parseInt(argString));
-        } catch (NumberFormatException e) {
-            throw new InvalidParameterError("Unable to parse: " + e.getMessage());
-        }
+        validArgs = new CoreClient.DoneMoveArgs("Wouter", 2);
+        emptyArgs = new CoreClient.DoneMoveArgs();
 
     }
 
+    @Test(expected = SyntaxError.class)
+    public void testConstructor() throws Exception {
+        new CoreClient.DoneMoveArgs(null, 4).serialize();
+    }
+
+    @Test
+    public void testReadValidArguments() throws Exception {
+
+        emptyArgs.read("Frits 3");
+
+    }
+
+    @Test(expected = SyntaxError.class)
+    public void testReadNoPlayerName() throws Exception {
+        emptyArgs.read("3");
+    }
+
+    @Test(expected = SyntaxError.class)
+    public void testReadNoColumn() throws Exception {
+        emptyArgs.read("Woutertje");
+    }
+
+    @Test
+    public void testSerialize() throws Exception {
+
+        assertEquals("validArgs.serialize()", "Wouter 2", validArgs.serialize());
+
+    }
 }

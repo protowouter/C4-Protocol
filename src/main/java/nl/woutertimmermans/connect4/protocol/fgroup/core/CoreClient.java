@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package nl.woutertimmermans.connect4.protocol.fgroup;
+package nl.woutertimmermans.connect4.protocol.fgroup.core;
 
 import nl.woutertimmermans.connect4.protocol.base.C4Args;
 import nl.woutertimmermans.connect4.protocol.base.C4Client;
@@ -271,6 +271,9 @@ public class CoreClient {
 
         @Override
         public void read(String argString) throws C4Exception {
+            if (argString == null) {
+                throw new SyntaxError("Wrong amount of parameters, I need at least 1, you gave none");
+            }
             String[] args = argString.split(" ", 2);
             groupNumber.read(args[0]);
             if (args.length > 1) {
@@ -312,6 +315,9 @@ public class CoreClient {
 
         @Override
         public void read(String argString) throws C4Exception {
+            if (argString == null) {
+                throw new SyntaxError("Wrong amount of parameters, I need 2, you gave none");
+            }
             String[] args = argString.split(" ");
             if (args.length != 2) {
                 throw new SyntaxError("Wrong amount of playernames");
@@ -390,6 +396,9 @@ public class CoreClient {
         }
 
         public void read(String argString) throws C4Exception {
+            if (argString == null) {
+                throw new SyntaxError("Wrong amount of parameters, I need 2, you gave none");
+            }
             String[] args = argString.split(" ");
             if (args.length != 2) {
                 throw new SyntaxError("Wrong amount of parameters given." +
@@ -458,6 +467,9 @@ public class CoreClient {
 
         @Override
         public void read(String argString) throws C4Exception {
+            if (argString == null) {
+                throw new SyntaxError("Wrong amount of parameters, I need at least 1, you gave none");
+            }
             String[] args = argString.split(" ", 2);
             errorCode.read(args[0]);
             if (args.length > 1) {
