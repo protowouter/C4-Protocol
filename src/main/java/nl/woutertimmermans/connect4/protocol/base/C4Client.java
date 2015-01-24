@@ -50,13 +50,15 @@ public class C4Client {
 
     public synchronized void send(String command, C4Args args) throws SyntaxError {
         try {
-            out.write(command);
-            String argString = args.serialize();
-            if (!"".equals(args.serialize())) {
-                out.write(" " + argString);
+            if (out != null) {
+                out.write(command);
+                String argString = args.serialize();
+                if (!"".equals(args.serialize())) {
+                    out.write(" " + argString);
+                }
+                out.newLine();
+                out.flush();
             }
-            out.newLine();
-            out.flush();
         } catch (IOException e) {
             Logger.getGlobal().throwing("C4Client", "send", e);
         }

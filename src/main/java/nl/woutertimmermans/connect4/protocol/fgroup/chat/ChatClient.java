@@ -107,7 +107,7 @@ public class ChatClient {
         }
 
         public MessageArgs(String pName, String mes) throws InvalidParameterError {
-            super();
+            this();
             playerName.setValue(pName);
             message.setValue(mes);
         }

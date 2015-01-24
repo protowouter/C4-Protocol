@@ -54,9 +54,9 @@ public interface CommandString {
 
     // -------------- Chat Client -----------------
 
-    public static final String GLOBAL_CHAT = "global_chat";
+    public static final String GLOBAL_CHAT = "chat_global";
 
-    public static final String LOCAL_CHAT = "local_chat";
+    public static final String LOCAL_CHAT = "chat_local";
 
     // ------------- Chat Server ------------------
 

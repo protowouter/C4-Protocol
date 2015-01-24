@@ -133,7 +133,7 @@ public class ChatServer {
         }
 
         public ChatArgs(String mes) throws InvalidParameterError {
-            super();
+            this();
             message.setValue(mes);
         }
 
