@@ -261,7 +261,7 @@ public class CoreClient {
         @Override
         public String[] getArgArray() {
             String[] result;
-            if (extensionList.getValue() != null && extensionList.getValue().size() > 1) {
+            if (extensionList.getValue() != null && extensionList.getValue().size() > 0) {
                 result = new String[]{groupNumber.serialize(), extensionList.serialize()};
             } else {
                 result = new String[]{groupNumber.serialize()};

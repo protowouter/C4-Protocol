@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class AcceptArgsTest {
 
@@ -57,6 +58,10 @@ public class AcceptArgsTest {
     @Test(expected = SyntaxError.class)
     public void testReadNull() throws Exception {
         emptyArgs.read(null);
+    }
+
+    public void testSerialize() throws Exception {
+        assertTrue("23 Chat Challenge".equals(validArgs.serialize()) || "23 Challenge Chat".equals(validArgs.serialize()));
     }
 
     @Test
