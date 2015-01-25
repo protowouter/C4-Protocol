@@ -229,7 +229,7 @@ public class CoreServer {
         @Override
         public String[] getArgArray() {
             String[] result;
-            if (exts.getValue().size() > 1) {
+            if (exts.getValue().size() > 0) {
                 result = new String[]{playerName.serialize(),
                         groupNumber.serialize(),
                         exts.serialize()

@@ -32,7 +32,7 @@
     <url>https://github.com/protowouter/C4-Protocol</url>
     <groupId>nl.woutertimmermans.connect4</groupId>
     <artifactId>c4-protocol</artifactId>
-    <version>0.8.2-SNAPSHOT</version>
+    <version>0.8.2</version>
     <licenses>
         <license>
             <name>MIT License</name>
@@ -137,6 +137,11 @@
             <artifactId>junit</artifactId>
             <version>4.11</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.10</version>
         </dependency>
     </dependencies>
     <properties>

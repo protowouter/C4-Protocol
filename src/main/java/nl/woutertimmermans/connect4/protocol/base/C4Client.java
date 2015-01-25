@@ -25,12 +25,15 @@
 package nl.woutertimmermans.connect4.protocol.base;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.SyntaxError;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.util.logging.Logger;
 
 public class C4Client {
+
+    private static final Logger logger = LoggerFactory.getLogger(C4Client.class);
 
 // ------------------ Instance variables ----------------
 
@@ -53,6 +56,7 @@ public class C4Client {
             if (out != null) {
                 out.write(command);
                 String argString = args.serialize();
+                logger.debug("Sending: {} {}", command, argString);
                 if (!"".equals(args.serialize())) {
                     out.write(" " + argString);
                 }
@@ -60,7 +64,7 @@ public class C4Client {
                 out.flush();
             }
         } catch (IOException e) {
-            Logger.getGlobal().throwing("C4Client", "send", e);
+            logger.trace("send", e);
         }
 
     }
