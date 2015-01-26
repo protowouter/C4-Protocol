@@ -32,7 +32,7 @@
     <url>https://github.com/protowouter/C4-Protocol</url>
     <groupId>nl.woutertimmermans.connect4</groupId>
     <artifactId>c4-protocol</artifactId>
-    <version>0.8.2</version>
+    <version>0.9.1-SNAPSHOT</version>
     <licenses>
         <license>
             <name>MIT License</name>
