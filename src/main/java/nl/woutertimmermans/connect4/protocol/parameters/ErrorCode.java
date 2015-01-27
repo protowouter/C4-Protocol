@@ -47,7 +47,7 @@ public class ErrorCode extends Parameter<Integer> {
 
     @Override
     public String serialize() {
-        return getValue() == null ? null : Integer.toString(getValue());
+        return getValue() == null ? null : getValue().toString();
     }
 
 // ----------------------- Commands ---------------------

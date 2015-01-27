@@ -26,41 +26,43 @@ package nl.woutertimmermans.connect4.protocol.parameters;
 
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
 
-public class Column extends Parameter<Integer> {
-
-    public static final int MIN_COL = 0;
-    public static final int MAX_COL = 6;
-
-
-// --------------------- Constructors -------------------
-
-    public Column() {
-
-    }
-
-// ----------------------- Queries ----------------------
-
-    @Override
-    public boolean testValue(Integer val) {
-        return val == null || val >= MIN_COL && val <= MAX_COL;
-    }
-
+public class BooleanAnswer extends Parameter<Boolean> {
+    /**
+     * Return a String serialization of this Parameter.
+     *
+     * @return the String serialization of this Parameter.
+     */
     @Override
     public String serialize() {
-        return getValue() == null ? null : getValue().toString();
+        String result = null;
+        if (Boolean.TRUE.equals(getValue())) {
+            result = "yes";
+        } else if (Boolean.FALSE.equals(getValue())) {
+            result = "false";
+        }
+        return result;
     }
 
-// ----------------------- Commands ---------------------
-
+    /**
+     * Reads a String representation of this Parameter and tries to parse this.
+     *
+     * @param argString String representation for this Parameter.
+     * @throws nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError When the intended value for this parameter is not valid.
+     */
     @Override
     public void read(String argString) throws InvalidParameterError {
-
-        try {
-            setValue(Integer.parseInt(argString));
-        } catch (NumberFormatException e) {
-            throw new InvalidParameterError("Unable to parse: " + e.getMessage());
+        if ("yes".equals(argString)) {
+            setValue(true);
+        } else if ("no".equals(argString)) {
+            setValue(false);
+        } else {
+            throw new InvalidParameterError("Invalid boolean answer");
         }
+    }
 
+    @Override
+    public boolean testValue(Boolean val) {
+        return false;
     }
 
 }
