@@ -24,10 +24,7 @@
 
 package nl.woutertimmermans.connect4.protocol.fgroup.core;
 
-import nl.woutertimmermans.connect4.protocol.base.C4Args;
-import nl.woutertimmermans.connect4.protocol.base.C4Client;
-import nl.woutertimmermans.connect4.protocol.base.C4ProcessFunction;
-import nl.woutertimmermans.connect4.protocol.base.C4Processor;
+import nl.woutertimmermans.connect4.protocol.base.*;
 import nl.woutertimmermans.connect4.protocol.constants.CommandString;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
@@ -35,6 +32,7 @@ import nl.woutertimmermans.connect4.protocol.exceptions.SyntaxError;
 import nl.woutertimmermans.connect4.protocol.parameters.*;
 
 import java.io.BufferedWriter;
+import java.nio.channels.SelectionKey;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -135,6 +133,51 @@ public class CoreClient {
 
             send(CommandString.ERROR, args);
 
+        }
+    }
+
+    public static class AsyncClient extends AsyncC4Client implements Iface {
+
+        public AsyncClient(SelectionKey key) {
+            super(key);
+        }
+
+        @Override
+        public void accept(int gNumber, Set<Extension> exts) throws C4Exception {
+            AcceptArgs args = new AcceptArgs(gNumber, exts);
+            send(CommandString.ACCEPT, args);
+        }
+
+        @Override
+        public void startGame(String p1, String p2) throws C4Exception {
+            StartGameArgs args = new StartGameArgs(p1, p2);
+            send(CommandString.START_GAME, args);
+        }
+
+        @Override
+        public void requestMove(String player) throws C4Exception {
+            RequestMoveArgs args = new RequestMoveArgs(player);
+            send(CommandString.REQUEST_MOVE, args);
+
+        }
+
+        @Override
+        public void doneMove(String player, int col) throws C4Exception {
+            DoneMoveArgs args = new DoneMoveArgs(player, col);
+            send(CommandString.DONE_MOVE, args);
+
+        }
+
+        @Override
+        public void gameEnd(String player) throws C4Exception {
+            GameEndArgs args = new GameEndArgs(player);
+            send(CommandString.GAME_END, args);
+        }
+
+        @Override
+        public void error(int eCode, String message) throws C4Exception {
+            ErrorArgs args = new ErrorArgs(eCode, message);
+            send(CommandString.ERROR, args);
         }
     }
 

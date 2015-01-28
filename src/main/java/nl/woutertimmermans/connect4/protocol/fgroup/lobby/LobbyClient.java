@@ -24,10 +24,7 @@
 
 package nl.woutertimmermans.connect4.protocol.fgroup.lobby;
 
-import nl.woutertimmermans.connect4.protocol.base.C4Args;
-import nl.woutertimmermans.connect4.protocol.base.C4Client;
-import nl.woutertimmermans.connect4.protocol.base.C4ProcessFunction;
-import nl.woutertimmermans.connect4.protocol.base.C4Processor;
+import nl.woutertimmermans.connect4.protocol.base.*;
 import nl.woutertimmermans.connect4.protocol.constants.CommandString;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
@@ -36,6 +33,7 @@ import nl.woutertimmermans.connect4.protocol.parameters.LobbyState;
 import nl.woutertimmermans.connect4.protocol.parameters.PlayerName;
 
 import java.io.BufferedWriter;
+import java.nio.channels.SelectionKey;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -49,6 +47,19 @@ public class LobbyClient {
 
         public Client(BufferedWriter out) {
             super(out);
+        }
+
+        @Override
+        public void stateChange(String playerName, LobbyState lobbyState) throws C4Exception {
+            StateChangeArgs args = new StateChangeArgs(playerName, lobbyState);
+            send(CommandString.STATE_CHANGE, args);
+        }
+    }
+
+    public static class AsyncClient extends AsyncC4Client implements Iface {
+
+        public AsyncClient(SelectionKey key) {
+            super(key);
         }
 
         @Override

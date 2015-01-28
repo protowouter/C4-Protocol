@@ -24,10 +24,7 @@
 
 package nl.woutertimmermans.connect4.protocol.fgroup.chat;
 
-import nl.woutertimmermans.connect4.protocol.base.C4Args;
-import nl.woutertimmermans.connect4.protocol.base.C4Client;
-import nl.woutertimmermans.connect4.protocol.base.C4ProcessFunction;
-import nl.woutertimmermans.connect4.protocol.base.C4Processor;
+import nl.woutertimmermans.connect4.protocol.base.*;
 import nl.woutertimmermans.connect4.protocol.constants.CommandString;
 import nl.woutertimmermans.connect4.protocol.exceptions.C4Exception;
 import nl.woutertimmermans.connect4.protocol.exceptions.InvalidParameterError;
@@ -35,6 +32,7 @@ import nl.woutertimmermans.connect4.protocol.exceptions.SyntaxError;
 import nl.woutertimmermans.connect4.protocol.parameters.PlayerName;
 
 import java.io.BufferedWriter;
+import java.nio.channels.SelectionKey;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,6 +58,26 @@ public class ChatClient {
             super(out);
         }
 
+        public void message(String playerName, String message) throws C4Exception {
+            MessageArgs args = new MessageArgs(playerName, message);
+            send(CommandString.MESSAGE, args);
+        }
+    }
+
+    public static class AsyncClient extends AsyncC4Client implements Iface {
+
+
+        public AsyncClient(SelectionKey key) {
+            super(key);
+        }
+
+        /**
+         * Used by the server to relay messages from a client to other clients.
+         *
+         * @param playerName The name of the user that sent the message.
+         * @param message    The message that another client has sent.
+         */
+        @Override
         public void message(String playerName, String message) throws C4Exception {
             MessageArgs args = new MessageArgs(playerName, message);
             send(CommandString.MESSAGE, args);
